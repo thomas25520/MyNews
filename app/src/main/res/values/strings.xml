@@ -8,4 +8,5 @@
     <!-- Used in NavigationDrawer -->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="arrow_back_go_to_activity_main">Arrow back go to activity_main</string>
 </resources>
