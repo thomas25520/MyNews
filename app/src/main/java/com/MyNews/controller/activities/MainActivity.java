@@ -56,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         addTabs(viewPager);
         android.support.design.widget.TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        viewPager.setBackgroundColor(getResources().getColor(R.color.colorWhite));
     }
 
     // Set Toolbar
