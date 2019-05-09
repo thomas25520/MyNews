@@ -7,7 +7,6 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -15,7 +14,7 @@ import android.view.MenuItem;
 
 import com.MyNews.R;
 import com.MyNews.controller.adapter.ViewPagerAdapter;
-import com.MyNews.controller.fragment.TabLayout;
+import com.MyNews.controller.fragment.TabLayoutCategories;
 
 import java.util.Objects;
 
@@ -28,7 +27,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.main_activity);
 
         configureNavigationView();
         configureDrawerLayout();
@@ -45,9 +44,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // Configure Drawer Layout
     private void configureDrawerLayout() {
         mDrawerLayout = findViewById(R.id.activity_main_drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        mDrawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
     }
 
     // Set ViewPagerAndTabs
@@ -63,14 +59,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setToolbar() {
         Toolbar toolbar = findViewById(R.id.activity_main_toolbar);
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setHomeAsUpIndicator(R.drawable.ic_baseline_menu_24px);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
     }
 
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new TabLayout(), "TOP STORIES");
-        adapter.addFrag(new TabLayout(), "MOST POPULAR");
-        adapter.addFrag(new TabLayout(), "BUSINESS");
+        adapter.addFrag(new TabLayoutCategories(), "TOP STORIES");
+        adapter.addFrag(new TabLayoutCategories(), "MOST POPULAR");
+        adapter.addFrag(new TabLayoutCategories(), "BUSINESS");
         viewPager.setAdapter(adapter);
     }
 
@@ -85,6 +82,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
             case R.id.menu_activity_main_search_btn:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));
                 return true;

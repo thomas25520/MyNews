@@ -9,9 +9,9 @@ import android.view.ViewGroup;
 
 import com.MyNews.R;
 
-public class TabLayout extends Fragment {
+public class TabLayoutCategories extends Fragment {
 
-    public TabLayout() {
+    public TabLayoutCategories() {
     }
 
     @Override
@@ -22,6 +22,6 @@ public class TabLayout extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab_layout, container, false);
+        return inflater.inflate(R.layout.fragment_tab_layout_categories, container, false);
     }
 }

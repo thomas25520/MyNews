@@ -1,12 +1,20 @@
 package com.MyNews.controller.activities;
 
+import android.app.DatePickerDialog;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.MyNews.R;
+
+import java.util.Calendar;
+import java.util.Objects;
 
 /**
  * Created by Dutru Thomas on 06/05/2019.
@@ -14,11 +22,20 @@ import com.MyNews.R;
 public class SearchActivity extends AppCompatActivity {
     EditText mQueryTerm;
 
+    private TextView mDisplayEndDate;
+    private TextView mDisplayBeginDate;
+
+    private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
+    private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.search_activity);
         initViews();
+        setBeginDate();
+        setEndDate();
     }
 
     public void initViews() {
@@ -43,5 +60,71 @@ public class SearchActivity extends AppCompatActivity {
                 finish();
             }
         });
+    }
+
+    public void setBeginDate() {
+        mDisplayBeginDate = findViewById(R.id.activity_search_begin_date);
+
+        mDisplayBeginDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        SearchActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListenerBegin,
+                        year, month, day);
+                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        // Display user choice on TextView
+        mDateSetListenerBegin = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+
+                String date = month + "/" + day + "/" + year;
+                mDisplayBeginDate.setText(date);
+            }
+        };
+    }
+
+    public void setEndDate() {
+        mDisplayEndDate = findViewById(R.id.activity_search_end_date);
+
+        mDisplayEndDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Calendar calendar = Calendar.getInstance();
+                int year = calendar.get(Calendar.YEAR);
+                int month = calendar.get(Calendar.MONTH);
+                int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog dialog = new DatePickerDialog(
+                        SearchActivity.this,
+                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                        mDateSetListenerEnd,
+                        year, month, day);
+                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+                dialog.show();
+            }
+        });
+
+        // Display user choice on TextView
+        mDateSetListenerEnd = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                month = month + 1;
+
+                String date = month + "/" + day + "/" + year;
+                mDisplayEndDate.setText(date);
+            }
+        };
     }
 }
