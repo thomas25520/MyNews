@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_activity_main, menu);
+        getMenuInflater().inflate(R.menu.main_activity_toolbar_menu, menu);
         return true;
     }
 
@@ -85,10 +85,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
                 return true;
-            case R.id.menu_activity_main_search_btn:
+            case R.id.activity_main_toolbar_search_btn:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));
-                return true;
-            case R.id.menu_activity_main_params_btn:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
