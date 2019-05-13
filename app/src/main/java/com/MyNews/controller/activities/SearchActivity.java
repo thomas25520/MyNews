@@ -28,6 +28,10 @@ public class SearchActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
     private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
 
+    private String monthToDisplay = "";
+    private String dayToDisplay = "";
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,6 +68,7 @@ public class SearchActivity extends AppCompatActivity {
     public void setBeginDate() {
         mDisplayBeginDate = findViewById(R.id.activity_search_begin_date);
 
+
         mDisplayBeginDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -88,8 +93,20 @@ public class SearchActivity extends AppCompatActivity {
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
 
-                String date = month + "/" + day + "/" + year;
+                // Display date to format mm/dd/yyyy
+                if (month < 10) {
+                    monthToDisplay = "0";
+                }
+                if (day < 10) {
+                    dayToDisplay = "0";
+                }
+
+                String date = monthToDisplay + month + "/" + dayToDisplay + day + "/" + year;
                 mDisplayBeginDate.setText(date);
+
+                // Erase "0" after the day has displayed
+                monthToDisplay = "";
+                dayToDisplay = "";
             }
         };
     }
@@ -120,9 +137,20 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
+                // Display date to format mm/dd/yyyy
+                if (month < 10) {
+                    monthToDisplay = "0";
+                }
+                if (day < 10) {
+                    dayToDisplay = "0";
+                }
 
-                String date = month + "/" + day + "/" + year;
+                String date = monthToDisplay + month + "/" + dayToDisplay + day + "/" + year;
                 mDisplayEndDate.setText(date);
+
+                // Erase "0" after the day has displayed
+                monthToDisplay = "";
+                dayToDisplay = "";
             }
         };
     }
