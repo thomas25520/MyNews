@@ -11,9 +11,6 @@ import com.MyNews.R;
 
 public class TabLayoutCategories extends Fragment {
 
-    public TabLayoutCategories() {
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

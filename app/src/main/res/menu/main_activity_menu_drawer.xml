@@ -5,21 +5,22 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/activity_main_drawer_news"
-            android:title="Fil d'actualité" />
+            android:id="@+id/activity_main_drawer_arts"
+            android:title="@string/checkbox_arts" />
+        <item
+            android:id="@+id/activity_main_drawer_politics"
+            android:title="@string/checkbox_politics" />
+        <item
+            android:id="@+id/activity_main_drawer_business"
+            android:title="@string/checkbox_business" />
+        <item
+            android:id="@+id/activity_main_drawer_sports"
+            android:title="@string/checkbox_sports" />
+        <item
+            android:id="@+id/activity_main_drawer_entrepreneurs"
+            android:title="@string/checkbox_entrepreneurs" />
+        <item
+            android:id="@+id/activity_main_drawer_travels"
+            android:title="@string/checkbox_travels" />
     </group>
-
-    <item android:title="Configuration">
-        <menu>
-            <group android:checkableBehavior="single">
-                <item
-                    android:id="@+id/activity_main_drawer_profile"
-                    android:title="Profil" />
-                <item
-                    android:id="@+id/activity_main_drawer_settings"
-                    android:title="Paramètres" />
-            </group>
-        </menu>
-    </item>
-
 </menu>
