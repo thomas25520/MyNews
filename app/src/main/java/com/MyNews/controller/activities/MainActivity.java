@@ -4,18 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.MyNews.R;
-import com.MyNews.controller.adapter.RecyclerViewAdapter;
 import com.MyNews.controller.adapter.ViewPagerAdapter;
 import com.MyNews.controller.fragment.TabLayoutCategories;
 
@@ -36,17 +34,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureDrawerLayout();
         setToolbar();
         setViewPagerAndTabs();
-        setRecyclerView();
     }
 
-    public void setRecyclerView() {
-        RecyclerView rv;
-
-        if ((rv = findViewById(R.id.list)) != null) {
-            rv.setLayoutManager(new LinearLayoutManager(this));
-            rv.setAdapter(new RecyclerViewAdapter());
-        }
-    }
 
     // Configure NavigationView
     private void configureNavigationView() {
@@ -63,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setViewPagerAndTabs() {
         ViewPager viewPager = findViewById(R.id.activity_main_viewpager);
         addTabs(viewPager);
-        android.support.design.widget.TabLayout tabLayout = findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setBackgroundColor(getResources().getColor(R.color.colorWhite));
     }

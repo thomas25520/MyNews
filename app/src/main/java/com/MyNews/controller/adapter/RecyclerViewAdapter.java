@@ -1,6 +1,7 @@
 package com.MyNews.controller.adapter;
 
 import android.app.AlertDialog;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -36,15 +37,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         return characters.size();
     }
 
+    @NonNull
     @Override
-    public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
         View view = inflater.inflate(R.layout.list_cell, parent, false);
         return new MyViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Pair<String, String> pair = characters.get(position);
         holder.display(pair);
     }
@@ -52,7 +54,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView name;
-        private final TextView description;
 
         private Pair<String, String> currentPair;
 
@@ -60,7 +61,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             super(itemView);
 
             name = (itemView.findViewById(R.id.name));
-            description = (itemView.findViewById(R.id.description));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -76,7 +76,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private void display(Pair<String, String> pair) {
             currentPair = pair;
             name.setText(pair.first);
-            description.setText(pair.second);
         }
     }
 }
