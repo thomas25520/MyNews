@@ -45,14 +45,14 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
 
-        private final TextView name;
+        private final TextView recyclerViewLines;
 
         private Pair<String, String> currentPair;
 
         private MyViewHolder(final View itemView) {
             super(itemView);
 
-            name = (itemView.findViewById(R.id.name));
+            recyclerViewLines = (itemView.findViewById(R.id.name));
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -67,7 +67,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         private void display(Pair<String, String> pair) {
             currentPair = pair;
-            name.setText(pair.first);
+            recyclerViewLines.setText(pair.first);
         }
     }
 }
