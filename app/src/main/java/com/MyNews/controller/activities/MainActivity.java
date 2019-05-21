@@ -21,9 +21,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
-    private Toolbar mToolbar;
     private DrawerLayout mDrawerLayout;
-    private NavigationView mNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +34,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         setViewPagerAndTabs();
     }
 
-
     // Configure NavigationView
     private void configureNavigationView() {
-        mNavigationView = findViewById(R.id.activity_main_nav_view);
-        mNavigationView.setNavigationItemSelectedListener(this);
+        NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
     }
 
     // Configure Drawer Layout
