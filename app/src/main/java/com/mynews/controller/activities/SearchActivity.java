@@ -1,4 +1,4 @@
-package com.MyNews.controller.activities;
+package com.mynews.controller.activities;
 
 import android.app.DatePickerDialog;
 import android.graphics.Color;
@@ -11,7 +11,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.MyNews.R;
+import com.mynews.R;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -35,7 +35,7 @@ public class SearchActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.search_activity);
+        setContentView(R.layout.activity_search);
         initViews();
         setBeginDate();
         setEndDate();
@@ -47,7 +47,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setQueryTerm() {
-        mQueryTerm = findViewById(R.id.query_term);
+        mQueryTerm = findViewById(R.id.activity_search_query_term);
         mQueryTerm.setHint("search query term");
     }
 
@@ -66,7 +66,7 @@ public class SearchActivity extends AppCompatActivity {
     }
 
     public void setBeginDate() {
-        mDisplayBeginDate = findViewById(R.id.activity_search_begin_date);
+        mDisplayBeginDate = findViewById(R.id.activity_search_start_date_edit);
 
 
         mDisplayBeginDate.setOnClickListener(new View.OnClickListener() {

@@ -1,4 +1,4 @@
-package com.MyNews.controller.fragment;
+package com.mynews.controller.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.MyNews.R;
-import com.MyNews.controller.adapter.RecyclerViewAdapter;
+import com.mynews.R;
+import com.mynews.controller.adapter.RecyclerViewAdapter;
 
 import java.util.Arrays;
 import java.util.List;
 
-public class TabLayoutCategories extends Fragment {
+public class TabCategoriesFragment extends Fragment {
 
     int categories = 1;
 
@@ -64,18 +64,18 @@ public class TabLayoutCategories extends Fragment {
             Pair.create("list3", "list3")
     );
 
-    public static TabLayoutCategories newInstance(int categories) {
-        TabLayoutCategories tabLayoutCategories = new TabLayoutCategories();
+    public static TabCategoriesFragment newInstance(int categories) {
+        TabCategoriesFragment tabCategoriesFragment = new TabCategoriesFragment();
         Bundle bundle = new Bundle();
         bundle.putInt("categories", categories);
-        tabLayoutCategories.categories = categories;
-        return tabLayoutCategories;
+        tabCategoriesFragment.categories = categories;
+        return tabCategoriesFragment;
     }
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tab_layout_categories, container, false);
+        View view = inflater.inflate(R.layout.fragment_tab_categories, container, false);
         RecyclerView.Adapter recyclerViewAdapter = new RecyclerViewAdapter();
 
         switch (categories) {

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.MyNews">
+    package="com.mynews">
 
     <application
         android:allowBackup="true"
@@ -10,7 +10,7 @@
         android:supportsRtl="true">
 
         <activity
-            android:name=".controller.activities.MainActivity"
+            android:name="com.mynews.controller.activities.MainActivity"
             android:theme="@style/MainActivityTheme"
             android:screenOrientation="portrait">
             <intent-filter>
@@ -20,7 +20,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".controller.activities.SearchActivity"
+            android:name="com.mynews.controller.activities.SearchActivity"
             android:theme="@style/SearchActivityTheme" />
     </application>
 

@@ -1,10 +1,10 @@
-package com.MyNews.controller.adapter;
+package com.mynews.controller.adapter;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.MyNews.controller.fragment.TabLayoutCategories;
+import com.mynews.controller.fragment.TabCategoriesFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,7 +13,7 @@ import java.util.List;
  * Created by Dutru Thomas on 03/05/2019.
  */
 public class ViewPagerAdapter extends FragmentPagerAdapter {
-    private final List<TabLayoutCategories> mFragmentList = new ArrayList<>();
+    private final List<TabCategoriesFragment> mFragmentList = new ArrayList<>();
     private final List<String> mFragmentTitleList = new ArrayList<>();
 
     public ViewPagerAdapter(FragmentManager manager) {
@@ -26,13 +26,13 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
 
         switch (position) {
             case 0:
-                return TabLayoutCategories.newInstance(position + 1);  // mFragmentList.get(position) == TabLayoutCategories
+                return TabCategoriesFragment.newInstance(position + 1);  // mFragmentList.get(position) == TabCategoriesFragment
             case 1:
-                return TabLayoutCategories.newInstance(position + 1);
+                return TabCategoriesFragment.newInstance(position + 1);
             case 2:
-                return TabLayoutCategories.newInstance(position + 1);
+                return TabCategoriesFragment.newInstance(position + 1);
             default:
-                return TabLayoutCategories.newInstance(1);
+                return TabCategoriesFragment.newInstance(1);
         }
     }
 
@@ -41,7 +41,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         return mFragmentList.size();
     }
 
-    public void addFrag(TabLayoutCategories fragment, String title) {
+    public void addFrag(TabCategoriesFragment fragment, String title) {
         mFragmentList.add(fragment);
         mFragmentTitleList.add(title);
     }

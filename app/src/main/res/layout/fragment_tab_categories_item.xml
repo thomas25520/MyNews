@@ -14,7 +14,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="15dp"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        tools:text="INFORMATIONS">
+        tools:text="fragment_tab_categories_item">
 
     </TextView>
 

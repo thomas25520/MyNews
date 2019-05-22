@@ -1,4 +1,4 @@
-package com.MyNews.controller.adapter;
+package com.mynews.controller.adapter;
 
 import android.app.AlertDialog;
 import android.support.annotation.NonNull;
@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.MyNews.R;
+import com.mynews.R;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.list_cell, parent, false);
+        View view = inflater.inflate(R.layout.fragment_tab_categories_item, parent, false);
         return new MyViewHolder(view);
     }
 

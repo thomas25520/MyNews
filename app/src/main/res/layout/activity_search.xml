@@ -17,7 +17,7 @@
         app:titleTextColor="@color/colorWhite" />
 
     <EditText
-        android:id="@+id/query_term"
+        android:id="@+id/activity_search_query_term"
         android:layout_width="0dp"
         android:layout_height="66dp"
         android:layout_marginStart="8dp"
@@ -29,25 +29,25 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/activity_search_spinner_title_start_date"
+        android:id="@+id/activity_search_start_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/spinner_title_start_date"
-        app:layout_constraintBottom_toTopOf="@+id/activity_search_begin_date"
-        app:layout_constraintStart_toStartOf="@+id/activity_search_begin_date" />
+        app:layout_constraintBottom_toTopOf="@+id/activity_search_start_date_edit"
+        app:layout_constraintStart_toStartOf="@+id/activity_search_start_date_edit" />
 
     <TextView
-        android:id="@+id/activity_search_spinner_title_end_date"
+        android:id="@+id/activity_search_end_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:text="@string/spinner_title_end_date"
-        app:layout_constraintBottom_toTopOf="@+id/activity_search_end_date"
-        app:layout_constraintStart_toStartOf="@+id/activity_search_end_date" />
+        app:layout_constraintBottom_toTopOf="@+id/activity_search_end_date_edit"
+        app:layout_constraintStart_toStartOf="@+id/activity_search_end_date_edit" />
 
     <TextView
-        android:id="@+id/activity_search_begin_date"
+        android:id="@+id/activity_search_start_date_edit"
         android:gravity="center"
         android:text="@string/empty_date_format"
         android:layout_width="0dp"
@@ -55,12 +55,12 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
-        app:layout_constraintEnd_toStartOf="@+id/activity_search_end_date"
+        app:layout_constraintEnd_toStartOf="@+id/activity_search_end_date_edit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/query_term" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_search_query_term" />
 
     <TextView
-        android:id="@+id/activity_search_end_date"
+        android:id="@+id/activity_search_end_date_edit"
         android:gravity="center"
         android:text="@string/empty_date_format"
         android:layout_width="0dp"
@@ -69,8 +69,8 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/activity_search_begin_date"
-        app:layout_constraintTop_toBottomOf="@+id/query_term" />
+        app:layout_constraintStart_toEndOf="@+id/activity_search_start_date_edit"
+        app:layout_constraintTop_toBottomOf="@+id/activity_search_query_term" />
 
     <CheckBox
         android:id="@+id/checkBox"
@@ -78,8 +78,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/checkbox_arts"
-        app:layout_constraintStart_toStartOf="@+id/activity_search_begin_date"
-        app:layout_constraintTop_toBottomOf="@+id/activity_search_begin_date" />
+        app:layout_constraintStart_toStartOf="@+id/activity_search_start_date_edit"
+        app:layout_constraintTop_toBottomOf="@+id/activity_search_start_date_edit" />
 
     <CheckBox
         android:id="@+id/checkBox2"
@@ -87,8 +87,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/checkbox_politics"
-        app:layout_constraintStart_toStartOf="@+id/activity_search_end_date"
-        app:layout_constraintTop_toBottomOf="@+id/activity_search_end_date" />
+        app:layout_constraintStart_toStartOf="@+id/activity_search_end_date_edit"
+        app:layout_constraintTop_toBottomOf="@+id/activity_search_end_date_edit" />
 
     <CheckBox
         android:id="@+id/checkBox3"
@@ -106,7 +106,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/checkbox_sports"
-        app:layout_constraintStart_toStartOf="@+id/activity_search_end_date"
+        app:layout_constraintStart_toStartOf="@+id/activity_search_end_date_edit"
         app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
 
     <CheckBox
@@ -125,7 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/checkbox_travels"
-        app:layout_constraintStart_toStartOf="@+id/activity_search_end_date"
+        app:layout_constraintStart_toStartOf="@+id/activity_search_end_date_edit"
         app:layout_constraintTop_toBottomOf="@+id/checkBox4" />
 
     <TextView

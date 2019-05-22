@@ -1,4 +1,4 @@
-package com.MyNews.controller.activities;
+package com.mynews.controller.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,9 +13,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.MyNews.R;
-import com.MyNews.controller.adapter.ViewPagerAdapter;
-import com.MyNews.controller.fragment.TabLayoutCategories;
+import com.mynews.R;
+import com.mynews.controller.adapter.ViewPagerAdapter;
+import com.mynews.controller.fragment.TabCategoriesFragment;
 
 import java.util.Objects;
 
@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.main_activity);
+        setContentView(R.layout.activity_main);
 
         configureNavigationView();
         configureDrawerLayout();
@@ -49,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void setViewPagerAndTabs() {
         ViewPager viewPager = findViewById(R.id.activity_main_viewpager);
         addTabs(viewPager);
-        TabLayout tabLayout = findViewById(R.id.tabs);
+        TabLayout tabLayout = findViewById(R.id.activity_main_tabs);
         tabLayout.setupWithViewPager(viewPager);
         viewPager.setBackgroundColor(getResources().getColor(R.color.colorWhite));
     }
@@ -64,9 +64,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private void addTabs(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFrag(new TabLayoutCategories(), "TOP STORIES");
-        adapter.addFrag(new TabLayoutCategories(), "MOST POPULAR");
-        adapter.addFrag(new TabLayoutCategories(), "BUSINESS");
+        adapter.addFrag(new TabCategoriesFragment(), "TOP STORIES");
+        adapter.addFrag(new TabCategoriesFragment(), "MOST POPULAR");
+        adapter.addFrag(new TabCategoriesFragment(), "BUSINESS");
         viewPager.setAdapter(adapter);
     }
 

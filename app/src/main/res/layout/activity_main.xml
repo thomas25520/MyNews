@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.MyNews.controller.activities.MainActivity"
+    tools:context="com.mynews.controller.activities.MainActivity"
     tools:openDrawer="start">
 
     <LinearLayout
@@ -22,7 +22,7 @@
             app:titleTextColor="@color/colorWhite" />
 
         <android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
+            android:id="@+id/activity_main_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/colorPrimary"
@@ -44,7 +44,7 @@
         android:layout_height="match_parent"
         android:layout_gravity="start"
         android:fitsSystemWindows="true"
-        app:headerLayout="@layout/main_activity_nav_drawer_header"
+        app:headerLayout="@layout/activity_main_nav_drawer_header"
         app:menu="@menu/main_activity_menu_drawer" />
 
 </android.support.v4.widget.DrawerLayout>
