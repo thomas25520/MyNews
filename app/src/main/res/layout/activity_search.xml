@@ -73,7 +73,7 @@
         app:layout_constraintTop_toBottomOf="@+id/activity_search_query_term" />
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/activity_search_checkBox_arts"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -82,7 +82,7 @@
         app:layout_constraintTop_toBottomOf="@+id/activity_search_start_date_edit" />
 
     <CheckBox
-        android:id="@+id/checkBox2"
+        android:id="@+id/activity_search_checkBox_politics"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -91,42 +91,42 @@
         app:layout_constraintTop_toBottomOf="@+id/activity_search_end_date_edit" />
 
     <CheckBox
-        android:id="@+id/checkBox3"
+        android:id="@+id/activity_search_checkBox_business"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:text="@string/checkbox_business"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_search_checkBox_arts" />
 
     <CheckBox
-        android:id="@+id/checkBox4"
+        android:id="@+id/activity_search_checkBox_sports"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/checkbox_sports"
         app:layout_constraintStart_toStartOf="@+id/activity_search_end_date_edit"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox2" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_search_checkBox_politics" />
 
     <CheckBox
-        android:id="@+id/checkBox5"
+        android:id="@+id/activity_search_checkBox_entrepreneurs"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="20dp"
         android:text="@string/checkbox_entrepreneurs"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox3" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_search_checkBox_business" />
 
     <CheckBox
-        android:id="@+id/checkBox6"
+        android:id="@+id/activity_search_checkBox_travels"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:text="@string/checkbox_travels"
         app:layout_constraintStart_toStartOf="@+id/activity_search_end_date_edit"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox4" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_search_checkBox_sports" />
 
     <TextView
         android:id="@+id/activity_search_search_btn"
@@ -143,6 +143,6 @@
         android:textSize="20sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox6" />
+        app:layout_constraintTop_toBottomOf="@+id/activity_search_checkBox_travels" />
 
 </android.support.constraint.ConstraintLayout>

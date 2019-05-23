@@ -1,15 +1,15 @@
 package com.mynews.controller.adapter;
 
-import android.app.AlertDialog;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.util.Pair;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mynews.R;
+import com.mynews.data.entities.Result;
 
 import java.util.List;
 
@@ -18,9 +18,9 @@ import java.util.List;
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
-    private List<Pair<String, String>> mList;
+    private List<Result> mList;
 
-    public void setList(List<Pair<String, String>> list) {
+    public RecyclerViewAdapter(List<Result> list) {
         this.mList = list;
     }
 
@@ -39,35 +39,22 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Pair<String, String> pair = mList.get(position);
-        holder.display(pair);
+        Result result = mList.get(position);
+        holder.title.setText(result.getTitle());
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
-
-        private final TextView recyclerViewLines;
-
-        private Pair<String, String> currentPair;
+        private ImageView picture;
+        private TextView categories;
+        private TextView date;
+        private TextView title;
 
         private MyViewHolder(final View itemView) {
             super(itemView);
-
-            recyclerViewLines = (itemView.findViewById(R.id.name));
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    new AlertDialog.Builder(itemView.getContext())
-                            .setTitle(currentPair.first)
-                            .setMessage(currentPair.second)
-                            .show();
-                }
-            });
-        }
-
-        private void display(Pair<String, String> pair) {
-            currentPair = pair;
-            recyclerViewLines.setText(pair.first);
+            picture = itemView.findViewById(R.id.fragment_tab_categories_item_img);
+            categories = itemView.findViewById(R.id.fragment_tab_categories_item_categories);
+            date = itemView.findViewById(R.id.fragment_tab_categories_item_date);
+            title = itemView.findViewById(R.id.fragment_tab_categories_item_title);
         }
     }
 }
