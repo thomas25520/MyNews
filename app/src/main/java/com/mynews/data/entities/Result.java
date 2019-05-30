@@ -8,8 +8,8 @@ import java.util.Date;
  * Created by Dutru Thomas on 22/05/2019.
  */
 public class Result {
-    @SerializedName("title")
-    String title;
+    @SerializedName("title") // API string name
+            String title; // My string name
 
     @SerializedName("abstract")
     String description;
@@ -28,12 +28,16 @@ public class Result {
         return title;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
+    public String getUrl() {
+        return url;
     }
 
     public String getDescription() {
         return description;
+    }
+
+    public Date getPublishedDate() {
+        return publishedDate;
     }
 
     // Setter
@@ -41,20 +45,16 @@ public class Result {
         this.description = description;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public void setUrl(String url) {
         this.url = url;
     }
 
-    public Date getPublishedDate() {
-        return publishedDate;
-    }
-
     public void setPublishedDate(Date publishedDate) {
         this.publishedDate = publishedDate;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
     @Override
