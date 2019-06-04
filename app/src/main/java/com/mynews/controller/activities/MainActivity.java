@@ -14,6 +14,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mynews.R;
+import com.mynews.controller.Speaker;
+import com.mynews.controller.TestClass;
+import com.mynews.controller.TestClassCallBack;
 import com.mynews.controller.adapter.ViewPagerAdapter;
 import com.mynews.controller.fragment.TabCategoriesFragment;
 
@@ -32,6 +35,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureDrawerLayout();
         setToolbar();
         setViewPagerAndTabs();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Speaker speaker = new Speaker("Thomas");
+
+        speaker.printCallBack(new TestClassCallBack());
+        speaker.printCallBack(new TestClass());
+//        TestClass thisT = new TestClass();
+//        speaker.printCallBack(thisT);
+//
+//
+//        speaker.setClass(thisT, new TestClassCallBack());
+//        speaker.sendMsgToAllListener();
     }
 
     // Configure NavigationView

@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.mynews.R;
 import com.mynews.data.entities.Result;
+import com.mynews.utils.RecyclerViewHolderListener;
 
 import java.util.List;
 
@@ -19,9 +20,20 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     private List<Result> mList;
+    private RecyclerViewHolderListener listener;
 
-    public RecyclerViewAdapter(List<Result> list) {
+    public RecyclerViewAdapter(List<Result> list, RecyclerViewHolderListener listener) {
         this.mList = list;
+        this.listener = listener;
+    }
+
+    public List<Result> getList() {
+        return mList;
+    }
+
+    public void setList(List<Result> list) {
+        mList = list;
+        notifyDataSetChanged(); // refresh data
     }
 
     @Override
@@ -38,9 +50,15 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
-        Result result = mList.get(position);
+    public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+        final Result result = mList.get(position);
         holder.title.setText(result.getTitle());
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onItemClicked(holder, result, position);
+            }
+        });
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {

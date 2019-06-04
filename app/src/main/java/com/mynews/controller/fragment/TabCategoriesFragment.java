@@ -10,16 +10,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mynews.R;
-import com.mynews.data.entities.Root;
-import com.mynews.data.remote.RetrofitManager;
+import com.mynews.controller.adapter.RecyclerViewAdapter;
+import com.mynews.data.entities.Result;
+import com.mynews.utils.CategoriesCall;
+import com.mynews.utils.RecyclerViewHolderListener;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import java.util.ArrayList;
+import java.util.List;
 
-public class TabCategoriesFragment extends Fragment {
+public class TabCategoriesFragment extends Fragment implements CategoriesCall.Callbacks {
 
     int categories = 1;
+    RecyclerViewAdapter recyclerAdapter;
 
     public static TabCategoriesFragment newInstance(int categories) {
         TabCategoriesFragment tabCategoriesFragment = new TabCategoriesFragment();
@@ -33,22 +35,23 @@ public class TabCategoriesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_categories, container, false);
-
-        RetrofitManager.getInstance().getTopStories().enqueue(new Callback<Root>() {
-            @Override
-            public void onResponse(@NonNull Call<Root> call, @NonNull Response<Root> response) {
-                response.body().getResults();
-            }
-
-            @Override
-            public void onFailure(Call<Root> call, Throwable t) {
-
-            }
-        });
-
+        initRecycler(view);
+        CategoriesCall categoriesCall = new CategoriesCall();
 
         switch (categories) {
             case 1:
+                categoriesCall.topStories(new CategoriesCall.Callbacks() {
+                    @Override
+                    public void onResponse(List<Result> result) {
+                        recyclerAdapter.setList(result);
+                    }
+
+                    @Override
+                    public void onFailure() {
+
+                    }
+                });
+                categoriesCall.topStories(this);
                 // TODO: Call "top stories" service
                 break;
             case 2:
@@ -60,13 +63,30 @@ public class TabCategoriesFragment extends Fragment {
             default:
                 break;
         }
-        //  setRecyclerView(view, recyclerViewAdapter);
         return view;
     }
 
-    public void setRecyclerView(View view, RecyclerView.Adapter recyclerViewAdapter) {
+    private void initRecycler(View view) {
+        RecyclerViewHolderListener listener = new RecyclerViewHolderListener() {
+            @Override
+            public void onItemClicked(RecyclerView.ViewHolder viewHolder, Object item, int pos) {
+                Result result = (Result) item;
+            }
+        };
+
+        recyclerAdapter = new RecyclerViewAdapter(new ArrayList<Result>(), listener);
         RecyclerView rv = view.findViewById(R.id.fragment_tab_categories_recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
-        rv.setAdapter(recyclerViewAdapter);
+        rv.setAdapter(recyclerAdapter);
+    }
+
+    @Override
+    public void onResponse(List<Result> result) {
+
+    }
+
+    @Override
+    public void onFailure() {
+
     }
 }
