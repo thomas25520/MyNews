@@ -15,6 +15,13 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
+    <!-- WebView activity theme -->
+    <style name="WebViewActivityTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
     <!-- Toolbar theme -->
     <style name="ToolBarStyle" parent="MainActivityTheme">
         <item name="android:textColorPrimary">@android:color/white</item>

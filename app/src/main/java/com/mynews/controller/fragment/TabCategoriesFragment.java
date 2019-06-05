@@ -1,5 +1,6 @@
 package com.mynews.controller.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
@@ -10,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mynews.R;
+import com.mynews.controller.activities.WebViewActivity;
 import com.mynews.controller.adapter.RecyclerViewAdapter;
 import com.mynews.data.entities.Result;
 import com.mynews.utils.CategoriesCall;
@@ -71,6 +73,10 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
             @Override
             public void onItemClicked(RecyclerView.ViewHolder viewHolder, Object item, int pos) {
                 Result result = (Result) item;
+//                Toast.makeText(getContext(), result.getUrl(), Toast.LENGTH_LONG).show();
+                Intent intent = new Intent(getContext(), WebViewActivity.class);
+                intent.putExtra("intent", result.getUrl()); // Get Url from API
+                startActivity(intent);
             }
         };
 
