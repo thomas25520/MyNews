@@ -1,5 +1,7 @@
 package com.mynews.data.entities;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
@@ -8,17 +10,18 @@ import java.util.Date;
  * Created by Dutru Thomas on 22/05/2019.
  */
 public class Result {
-    @SerializedName("title") // API string name
-            String title; // My string name
+    // Serialisation
+    @SerializedName("title")// API string name
+    private String title; // My string name
 
     @SerializedName("abstract")
-    String description;
+    private String description;
 
     @SerializedName("url")
-    String url;
+    private String url;
 
     @SerializedName("published_date")
-    Date publishedDate;
+    private Date publishedDate;
 
     public Result() {
     }
@@ -57,6 +60,7 @@ public class Result {
         this.title = title;
     }
 
+    @NonNull
     @Override
     public String toString() {
         return "Result{" +

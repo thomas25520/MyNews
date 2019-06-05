@@ -73,9 +73,8 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
             @Override
             public void onItemClicked(RecyclerView.ViewHolder viewHolder, Object item, int pos) {
                 Result result = (Result) item;
-//                Toast.makeText(getContext(), result.getUrl(), Toast.LENGTH_LONG).show();
                 Intent intent = new Intent(getContext(), WebViewActivity.class);
-                intent.putExtra("intent", result.getUrl()); // Get Url from API
+                intent.putExtra("getUrl", result.getUrl()); // Get Url from API to display on webView
                 startActivity(intent);
             }
         };
@@ -88,11 +87,9 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
 
     @Override
     public void onResponse(List<Result> result) {
-
     }
 
     @Override
     public void onFailure() {
-
     }
 }
