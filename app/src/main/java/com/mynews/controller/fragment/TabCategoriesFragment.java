@@ -54,7 +54,6 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
                     }
                 });
                 categoriesCall.topStories(this);
-                // TODO: Call "top stories" service
                 break;
             case 2:
                 // TODO: Call "most popular" service

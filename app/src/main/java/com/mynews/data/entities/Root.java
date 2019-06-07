@@ -9,7 +9,7 @@ import java.util.List;
  */
 public class Root {
     @SerializedName("results")
-    List<Result> results;
+    private List<Result> results;
 
     public Root() {
     }

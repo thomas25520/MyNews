@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.mynews.R;
 import com.mynews.data.entities.Result;
 import com.mynews.utils.RecyclerViewHolderListener;
+import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -25,10 +27,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     public RecyclerViewAdapter(List<Result> list, RecyclerViewHolderListener listener) {
         this.mList = list;
         this.listener = listener;
-    }
-
-    public List<Result> getList() {
-        return mList;
     }
 
     public void setList(List<Result> list) {
@@ -51,8 +49,16 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
+
         final Result result = mList.get(position);
+        holder.categories.setText(result.getCategory());
+        holder.subsection.setText(result.getSubsection());
+        if (result.hasImage())     // prevents the application from crashing if the article does not contain an image or link
+            Picasso.get().load(result.getMultimedia().get(0).getUrl()).into(holder.picture); // Use picasso library to display picture
         holder.title.setText(result.getTitle());
+        holder.date.setText(sdf.format(result.getPublishedDate())); // Convert date with SimpleDateFormat
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -66,6 +72,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private TextView categories;
         private TextView date;
         private TextView title;
+        private TextView subsection;
 
         private MyViewHolder(final View itemView) {
             super(itemView);
@@ -73,6 +80,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             categories = itemView.findViewById(R.id.fragment_tab_categories_item_categories);
             date = itemView.findViewById(R.id.fragment_tab_categories_item_date);
             title = itemView.findViewById(R.id.fragment_tab_categories_item_title);
+            subsection = itemView.findViewById(R.id.fragment_tab_categories_item_subsection);
         }
     }
 }
