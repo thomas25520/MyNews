@@ -35,7 +35,9 @@ public class Result {
 
     // prevents the application from crashing if the article does not contain an image or link
     public boolean hasImage() {
-        return multimedia.size() > 0 && multimedia.get(0).getUrl() != null;
+        if (multimedia != null)
+            return multimedia.size() > 0 && multimedia.get(0).getUrl() != null;
+        return false;
         // The same as
 //        if (multimedia.size() > 0 && multimedia.get(0).getUrl() != null)
 //            return true;

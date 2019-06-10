@@ -42,7 +42,32 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
 
         switch (categories) {
             case 1:
-                categoriesCall.topStories(new CategoriesCall.Callbacks() {
+                categoriesCall.topStoriesHome(new CategoriesCall.Callbacks() {
+                    @Override
+                    public void onResponse(List<Result> result) {
+                        recyclerAdapter.setList(result);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                    }
+                });
+                categoriesCall.topStoriesHome(this);
+                break;
+            case 2:
+                categoriesCall.mostPopular(new CategoriesCall.Callbacks() {
+                    @Override
+                    public void onResponse(List<Result> result) {
+                        recyclerAdapter.setList(result);
+                    }
+
+                    @Override
+                    public void onFailure() {
+                    }
+                });
+                break;
+            case 3:
+                categoriesCall.topStoryFrom(new CategoriesCall.Callbacks() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setList(result);
@@ -53,13 +78,7 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
 
                     }
                 });
-                categoriesCall.topStories(this);
-                break;
-            case 2:
-                // TODO: Call "most popular" service
-                break;
-            case 3:
-                // TODO: Call "business" service
+                categoriesCall.topStoryFrom(this);
                 break;
             default:
                 break;

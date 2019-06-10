@@ -9,15 +9,21 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class RetrofitManager {
 
     private static NewYorkTimesServices INSTANCE = null;
+    private static final String BaseUrl = "https://api.nytimes.com/svc/";
+    private static String ApiKey = "qn43KpoBbYTQdMXbOPSaJbv4h6vzAv5x";
 
     private RetrofitManager() {
+    }
+
+    public static String getApiKey() {
+        return ApiKey;
     }
 
     public static NewYorkTimesServices getInstance() {
         if (INSTANCE == null) {
             Retrofit retrofit = new Retrofit.Builder()
                     .addConverterFactory(GsonConverterFactory.create()) // Convert Json to object
-                    .baseUrl("https://api.nytimes.com/svc/")
+                    .baseUrl(BaseUrl)
                     .build();
             INSTANCE = retrofit.create(NewYorkTimesServices.class);
         }

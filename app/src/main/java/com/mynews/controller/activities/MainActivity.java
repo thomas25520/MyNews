@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFrag(new TabCategoriesFragment(), "TOP STORIES");
         adapter.addFrag(new TabCategoriesFragment(), "MOST POPULAR");
-        adapter.addFrag(new TabCategoriesFragment(), "BUSINESS");
+        adapter.addFrag(new TabCategoriesFragment(), "AUTOMOBILE");
         viewPager.setAdapter(adapter);
     }
 
