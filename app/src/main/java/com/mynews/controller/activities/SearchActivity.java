@@ -20,16 +20,11 @@ import java.util.Objects;
  * Created by Dutru Thomas on 06/05/2019.
  */
 public class SearchActivity extends AppCompatActivity {
-    EditText mQueryTerm;
-
+    public EditText mQueryTerm;
     private TextView mDisplayEndDate;
     private TextView mDisplayBeginDate;
-
     private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
     private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
-
-    private String monthToDisplay = "";
-    private String dayToDisplay = "";
 
 
     @Override
@@ -68,7 +63,6 @@ public class SearchActivity extends AppCompatActivity {
     public void setBeginDate() {
         mDisplayBeginDate = findViewById(R.id.activity_search_start_date_edit);
 
-
         mDisplayBeginDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,27 +86,14 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-
-                // Display date to format mm/dd/yyyy
-                if (month < 10) {
-                    monthToDisplay = "0";
-                }
-                if (day < 10) {
-                    dayToDisplay = "0";
-                }
-
-                String date = monthToDisplay + month + "/" + dayToDisplay + day + "/" + year;
+                String date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
                 mDisplayBeginDate.setText(date);
-
-                // Erase "0" after the day has displayed
-                monthToDisplay = "";
-                dayToDisplay = "";
             }
         };
     }
 
     public void setEndDate() {
-        mDisplayEndDate = findViewById(R.id.activity_search_end_date);
+        mDisplayEndDate = findViewById(R.id.activity_search_end_date_edit);
 
         mDisplayEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,20 +118,8 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                // Display date to format mm/dd/yyyy
-                if (month < 10) {
-                    monthToDisplay = "0";
-                }
-                if (day < 10) {
-                    dayToDisplay = "0";
-                }
-
-                String date = monthToDisplay + month + "/" + dayToDisplay + day + "/" + year;
+                String date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
                 mDisplayEndDate.setText(date);
-
-                // Erase "0" after the day has displayed
-                monthToDisplay = "";
-                dayToDisplay = "";
             }
         };
     }
