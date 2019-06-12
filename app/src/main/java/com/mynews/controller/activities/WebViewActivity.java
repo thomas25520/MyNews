@@ -15,7 +15,6 @@ public class WebViewActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
         WebView webView = findViewById(R.id.activity_web_view);
-        webView.getSettings().setJavaScriptEnabled(true); // Add javaScript compatibility (more pages will be compatible). not very secure but sufficient for this application
         webView.loadUrl(Objects.requireNonNull(getIntent().getExtras()).getString("getUrl")); // Load URL on WebView and display it
     }
 }

@@ -23,17 +23,7 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     // Returns the fragment to display for a particular page.
     @Override
     public Fragment getItem(int position) {
-
-        switch (position) {
-            case 0:
-                return TabCategoriesFragment.newInstance(position + 1);  // mFragmentList.get(position) == TabCategoriesFragment
-            case 1:
-                return TabCategoriesFragment.newInstance(position + 1);
-            case 2:
-                return TabCategoriesFragment.newInstance(position + 1);
-            default:
-                return TabCategoriesFragment.newInstance(1);
-        }
+        return TabCategoriesFragment.newInstance(position + 1);
     }
 
     @Override

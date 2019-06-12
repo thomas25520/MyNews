@@ -30,6 +30,9 @@ public class Result {
     @SerializedName("multimedia")
     private List<Multimedia> multimedia;
 
+    @SerializedName("media")
+    private List<Media> media;
+
     public Result() {
     }
 
@@ -49,6 +52,11 @@ public class Result {
     public String getCategory() {
         return category;
     }
+
+    public List<Media> getMedia() {
+        return media;
+    }
+
 
     // Setter
     public void setCategory(String category) {
@@ -89,6 +97,10 @@ public class Result {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public void setMedia(List<Media> media) {
+        this.media = media;
     }
 
     @NonNull

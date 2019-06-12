@@ -55,6 +55,7 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
                 categoriesCall.topStoriesHome(this);
                 break;
             case 2:
+                recyclerAdapter.setMultimediaRequired(false);
                 categoriesCall.mostPopular(new CategoriesCall.Callbacks() {
                     @Override
                     public void onResponse(List<Result> result) {
