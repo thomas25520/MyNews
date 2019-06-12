@@ -23,6 +23,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     private List<Result> mList;
     private RecyclerViewHolderListener listener;
+    private boolean isMultimediaRequired = true;
 
     public RecyclerViewAdapter(List<Result> list, RecyclerViewHolderListener listener) {
         this.mList = list;
@@ -53,10 +54,23 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
 
         final Result result = mList.get(position);
-        holder.categories.setText(result.getCategory());
-        holder.subsection.setText(result.getSubsection());
-        if (result.hasImage())     // prevents the application from crashing if the article does not contain an image or link
-            Picasso.get().load(result.getMultimedia().get(0).getUrl()).into(holder.picture); // Use picasso library to display picture
+        if (result.getSubsection() == null) {
+            holder.categories.setText(result.getCategory());
+        } else {
+            if (result.getSubsection().isEmpty()) {
+                holder.categories.setText(result.getCategory());
+            } else {
+                holder.categories.setText(result.getCategory() + " > " + result.getSubsection());
+            }
+        }
+
+        if (isMultimediaRequired) {
+            if (result.hasImage())     // prevents the application from crashing if the article does not contain an image or link
+                Picasso.get().load(result.getMultimedia().get(0).getUrl()).into(holder.picture); // Use picasso library to display picture
+        } else {
+            Picasso.get().load(result.getMedia().get(0).getMediaMetadataList().get(0).getUrl()).into(holder.picture);
+        }
+
         holder.title.setText(result.getTitle());
         holder.date.setText(sdf.format(result.getPublishedDate())); // Convert date with SimpleDateFormat
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -65,6 +79,10 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
                 listener.onItemClicked(holder, result, position);
             }
         });
+    }
+
+    public void setMultimediaRequired(boolean isMultimediaRequired) {
+        this.isMultimediaRequired = isMultimediaRequired;
     }
 
     public class MyViewHolder extends RecyclerView.ViewHolder {
@@ -80,7 +98,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             categories = itemView.findViewById(R.id.fragment_tab_categories_item_categories);
             date = itemView.findViewById(R.id.fragment_tab_categories_item_date);
             title = itemView.findViewById(R.id.fragment_tab_categories_item_title);
-            subsection = itemView.findViewById(R.id.fragment_tab_categories_item_subsection);
+//            subsection = itemView.findViewById(R.id.fragment_tab_categories_item_subsection);
         }
     }
 }
