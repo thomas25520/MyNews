@@ -20,6 +20,11 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
         super(manager);
     }
 
+    public void addFrag(TabCategoriesFragment fragment, String title) {
+        mFragmentList.add(fragment);
+        mFragmentTitleList.add(title);
+    }
+
     // Returns the fragment to display for a particular page.
     @Override
     public Fragment getItem(int position) {
@@ -29,11 +34,6 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         return mFragmentList.size();
-    }
-
-    public void addFrag(TabCategoriesFragment fragment, String title) {
-        mFragmentList.add(fragment);
-        mFragmentTitleList.add(title);
     }
 
     @Override
