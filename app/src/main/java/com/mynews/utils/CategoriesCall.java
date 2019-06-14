@@ -2,8 +2,8 @@ package com.mynews.utils;
 
 import android.support.annotation.NonNull;
 
-import com.mynews.data.entities.Result;
-import com.mynews.data.entities.Root;
+import com.mynews.data.entities.topStoriesMostPopularOther.Result;
+import com.mynews.data.entities.topStoriesMostPopularOther.Root;
 import com.mynews.data.remote.RetrofitManager;
 
 import java.util.List;
