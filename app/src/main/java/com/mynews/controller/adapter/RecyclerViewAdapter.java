@@ -9,7 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mynews.R;
-import com.mynews.data.entities.Result;
+import com.mynews.data.entities.topStoriesMostPopularOther.Result;
 import com.mynews.utils.RecyclerViewHolderListener;
 import com.squareup.picasso.Picasso;
 

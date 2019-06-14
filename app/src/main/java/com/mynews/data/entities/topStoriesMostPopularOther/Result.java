@@ -1,4 +1,4 @@
-package com.mynews.data.entities;
+package com.mynews.data.entities.topStoriesMostPopularOther;
 
 import android.support.annotation.NonNull;
 

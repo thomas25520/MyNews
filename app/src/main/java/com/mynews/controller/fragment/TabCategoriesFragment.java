@@ -13,7 +13,7 @@ import android.view.ViewGroup;
 import com.mynews.R;
 import com.mynews.controller.activities.WebViewActivity;
 import com.mynews.controller.adapter.RecyclerViewAdapter;
-import com.mynews.data.entities.Result;
+import com.mynews.data.entities.topStoriesMostPopularOther.Result;
 import com.mynews.utils.CategoriesCall;
 import com.mynews.utils.RecyclerViewHolderListener;
 

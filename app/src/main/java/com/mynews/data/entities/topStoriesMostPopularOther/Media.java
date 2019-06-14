@@ -1,4 +1,4 @@
-package com.mynews.data.entities;
+package com.mynews.data.entities.topStoriesMostPopularOther;
 
 import com.google.gson.annotations.SerializedName;
 
