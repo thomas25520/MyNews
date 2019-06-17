@@ -7,11 +7,15 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mynews.R;
+import com.mynews.controller.model.Search;
+import com.mynews.utils.Constants;
+import com.mynews.utils.SharedPreferencesManager;
 
 import java.util.Calendar;
 import java.util.Objects;
@@ -26,19 +30,71 @@ public class SearchActivity extends AppCompatActivity {
     private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
     private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
 
+    TextView mSearchBtn;
+    Search mSearch;
+    private CheckBox mArts;
+    private CheckBox mPolitics;
+    private CheckBox mBusiness;
+    private CheckBox mSports;
+    private CheckBox mEntrepreneurs;
+    private CheckBox mTravels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         initViews();
-        setBeginDate();
-        setEndDate();
     }
 
     public void initViews() {
+        mSearchBtn = findViewById(R.id.activity_search_search_btn);
+        mArts = findViewById(R.id.activity_search_checkBox_arts);
+        mPolitics = findViewById(R.id.activity_search_checkBox_politics);
+        mBusiness = findViewById(R.id.activity_search_checkBox_business);
+        mSports = findViewById(R.id.activity_search_checkBox_sports);
+        mEntrepreneurs = findViewById(R.id.activity_search_checkBox_entrepreneurs);
+        mTravels = findViewById(R.id.activity_search_checkBox_travels);
+
         setToolbar();
         setQueryTerm();
+        setBeginDate();
+        setEndDate();
+        onBtnSearchClickListener();
+    }
+
+    private void onBtnSearchClickListener() {
+        mSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String queryTerm = mQueryTerm.getText().toString();
+                String displayBeginDate = mDisplayBeginDate.getText().toString();
+                String displayEndDate = mDisplayEndDate.getText().toString();
+
+                boolean arts = mArts.isChecked();
+                boolean politics = mPolitics.isChecked();
+                boolean business = mBusiness.isChecked();
+                boolean sports = mSports.isChecked();
+                boolean entrepreneurs = mEntrepreneurs.isChecked();
+                boolean travels = mTravels.isChecked();
+
+                mSearch = new Search(queryTerm, displayBeginDate, displayEndDate, arts, politics, business, sports, entrepreneurs, travels);
+                SharedPreferencesManager.putSearch(getBaseContext(), Constants.SEARCH_OBJECT, mSearch);
+
+//                Log.i("TEST queryTerm", queryTerm);
+//                Log.i("TEST beginDate", displayBeginDate);
+//                Log.i("TEST endDate", displayEndDate);
+//
+//                if (arts)
+//                System.out.println("TEST arts == True");
+//                else
+//                System.out.println("TEST arts == False");
+            }
+        });
     }
 
     public void setQueryTerm() {
