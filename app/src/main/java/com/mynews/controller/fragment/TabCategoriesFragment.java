@@ -14,13 +14,14 @@ import com.mynews.R;
 import com.mynews.controller.activities.WebViewActivity;
 import com.mynews.controller.adapter.RecyclerViewAdapter;
 import com.mynews.data.entities.topStoriesMostPopularOther.Result;
+import com.mynews.myInterface.RootCallback;
 import com.mynews.utils.CategoriesCall;
 import com.mynews.utils.RecyclerViewHolderListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabCategoriesFragment extends Fragment implements CategoriesCall.Callbacks {
+public class TabCategoriesFragment extends Fragment implements RootCallback {
 
     int categories = 1;
     RecyclerViewAdapter recyclerAdapter;
@@ -42,7 +43,7 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
 
         switch (categories) {
             case 1:
-                categoriesCall.topStoriesHome(new CategoriesCall.Callbacks() {
+                categoriesCall.topStoriesHome(new RootCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setList(result);
@@ -56,7 +57,7 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
                 break;
             case 2:
                 recyclerAdapter.setMultimediaRequired(false);
-                categoriesCall.mostPopular(new CategoriesCall.Callbacks() {
+                categoriesCall.mostPopular(new RootCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setList(result);
@@ -68,7 +69,7 @@ public class TabCategoriesFragment extends Fragment implements CategoriesCall.Ca
                 });
                 break;
             case 3:
-                categoriesCall.topStoryFrom(new CategoriesCall.Callbacks() {
+                categoriesCall.topStoryFrom(new RootCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setList(result);

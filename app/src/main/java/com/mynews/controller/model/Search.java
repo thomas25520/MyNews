@@ -48,79 +48,71 @@ public class Search {
         return mQueryTerm;
     }
 
-    // Setter
-    public void setQueryTerm(String queryTerm) {
-        mQueryTerm = queryTerm;
-    }
-
     public String getBeginDate() {
         return mBeginDate;
-    }
-
-    public void setBeginDate(String beginDate) {
-        this.mBeginDate = beginDate;
     }
 
     public String getEndDate() {
         return mEndDate;
     }
 
-    public void setEndDate(String endDate) {
-        mEndDate = endDate;
-    }
-
     public boolean isCheckboxArts() {
         return mCheckboxArts;
-    }
-
-    public void setCheckboxArts(boolean checkboxArts) {
-        mCheckboxArts = checkboxArts;
     }
 
     public boolean isCheckboxPolitics() {
         return mCheckboxPolitics;
     }
 
-    public void setCheckboxPolitics(boolean checkboxPolitics) {
-        mCheckboxPolitics = checkboxPolitics;
-    }
-
     public boolean isCheckboxBusiness() {
         return mCheckboxBusiness;
-    }
-
-    public void setCheckboxBusiness(boolean checkboxBusiness) {
-        mCheckboxBusiness = checkboxBusiness;
     }
 
     public boolean isCheckboxSports() {
         return mCheckboxSports;
     }
 
-    public void setCheckboxSports(boolean checkboxSports) {
-        mCheckboxSports = checkboxSports;
-    }
-
     public boolean isCheckboxEntrepreneurs() {
         return mCheckboxEntrepreneurs;
-    }
-
-    public void setCheckboxEntrepreneurs(boolean checkboxEntrepreneurs) {
-        mCheckboxEntrepreneurs = checkboxEntrepreneurs;
     }
 
     public boolean isCheckboxTravels() {
         return mCheckboxTravels;
     }
 
+    // Setter
+    public void setQueryTerm(String queryTerm) {
+        mQueryTerm = queryTerm;
+    }
+    public void setBeginDate(String beginDate) {
+        this.mBeginDate = beginDate;
+    }
+    public void setEndDate(String endDate) {
+        mEndDate = endDate;
+    }
+    public void setCheckboxArts(boolean checkboxArts) {
+        mCheckboxArts = checkboxArts;
+    }
+    public void setCheckboxPolitics(boolean checkboxPolitics) {
+        mCheckboxPolitics = checkboxPolitics;
+    }
+    public void setCheckboxBusiness(boolean checkboxBusiness) {
+        mCheckboxBusiness = checkboxBusiness;
+    }
+    public void setCheckboxSports(boolean checkboxSports) {
+        mCheckboxSports = checkboxSports;
+    }
+    public void setCheckboxEntrepreneurs(boolean checkboxEntrepreneurs) {
+        mCheckboxEntrepreneurs = checkboxEntrepreneurs;
+    }
     public void setCheckboxTravels(boolean checkboxTravels) {
         mCheckboxTravels = checkboxTravels;
     }
 
     /**
-     * Transform mood object to Json
+     * Transform object to Json
      *
-     * @return mood as json string
+     * @return object as json string
      */
     public String formatToJson() {
         Gson gson = new Gson();

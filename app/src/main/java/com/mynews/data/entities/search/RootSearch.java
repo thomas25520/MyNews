@@ -2,25 +2,23 @@ package com.mynews.data.entities.search;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 /**
  * Created by Dutru Thomas on 14/06/2019.
  */
 public class RootSearch {
     @SerializedName("response")
-    private List<SearchResponse> SearchResponse;
+    private SearchResponse searchResponse;
 
     public RootSearch() {
     }
 
     // Getter
-    public List<com.mynews.data.entities.search.SearchResponse> getSearchResponse() {
-        return SearchResponse;
+    public SearchResponse getSearchResponse() {
+        return searchResponse;
     }
 
     // Setter
-    public void setSearchResponse(List<com.mynews.data.entities.search.SearchResponse> searchResponse) {
-        SearchResponse = searchResponse;
+    public void setSearchResponse(SearchResponse searchResponse) {
+        this.searchResponse = searchResponse;
     }
 }

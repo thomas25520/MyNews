@@ -14,19 +14,30 @@ import android.widget.TextView;
 
 import com.mynews.R;
 import com.mynews.controller.model.Search;
-import com.mynews.utils.Constants;
-import com.mynews.utils.SharedPreferencesManager;
+import com.mynews.data.entities.search.SearchResponse;
+import com.mynews.myInterface.RootSearchCallBack;
+import com.mynews.utils.SearchCall;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Objects;
 
 /**
  * Created by Dutru Thomas on 06/05/2019.
  */
-public class SearchActivity extends AppCompatActivity {
-    public EditText mQueryTerm;
-    private TextView mDisplayEndDate;
-    private TextView mDisplayBeginDate;
+public class SearchActivity extends AppCompatActivity implements RootSearchCallBack { // while implement interface, should implement method
+
+    private final SearchActivity mThis = this;
+
+    public EditText mQuery;
+    private TextView mBeginDate;
+    private TextView mEndDate;
+    private String mSection;
+    private String mBeginDateApi;
+    private String mEndDateApi;
+
+
     private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
     private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
 
@@ -71,38 +82,40 @@ public class SearchActivity extends AppCompatActivity {
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String queryTerm = mQueryTerm.getText().toString();
-                String displayBeginDate = mDisplayBeginDate.getText().toString();
-                String displayEndDate = mDisplayEndDate.getText().toString();
+                getSection();
 
-                boolean arts = mArts.isChecked();
-                boolean politics = mPolitics.isChecked();
-                boolean business = mBusiness.isChecked();
-                boolean sports = mSports.isChecked();
-                boolean entrepreneurs = mEntrepreneurs.isChecked();
-                boolean travels = mTravels.isChecked();
+                SearchCall searchCall = new SearchCall();
+                searchCall.search(mThis, mQuery, mBeginDateApi, mEndDateApi);
 
-                mSearch = new Search(queryTerm, displayBeginDate, displayEndDate, arts, politics, business, sports, entrepreneurs, travels);
-                SharedPreferencesManager.putSearch(getBaseContext(), Constants.SEARCH_OBJECT, mSearch);
 
-//                Log.i("TEST queryTerm", queryTerm);
-//                Log.i("TEST beginDate", displayBeginDate);
-//                Log.i("TEST endDate", displayEndDate);
-//
-//                if (arts)
-//                System.out.println("TEST arts == True");
-//                else
-//                System.out.println("TEST arts == False");
+//                String queryTerm = mQueryTerm.getText().toString();
+//                String displayBeginDate = mDisplayBeginDate.getText().toString();
+//                String displayEndDate = mDisplayEndDate.getText().toString();
+
+                //mSearch = new Search(queryTerm, displayBeginDate, displayEndDate, arts, politics, business, sports, entrepreneurs, travels);
+                //SharedPreferencesManager.putSearch(getBaseContext(), Constants.SEARCH_OBJECT, mSearch);
             }
         });
     }
 
-    public void setQueryTerm() {
-        mQueryTerm = findViewById(R.id.activity_search_query_term);
-        mQueryTerm.setHint("search query term");
+    private void getSection() {
+        // Checkbox is checked or not
+        boolean arts = mArts.isChecked();
+        boolean politics = mPolitics.isChecked();
+        boolean business = mBusiness.isChecked();
+        boolean sports = mSports.isChecked();
+        boolean entrepreneurs = mEntrepreneurs.isChecked();
+        boolean travels = mTravels.isChecked();
+
+        // todo fusionner les sections dans mSections pour faire une seule requête
     }
 
-    public void setToolbar() {
+    private void setQueryTerm() {
+        mQuery = findViewById(R.id.activity_search_query_term);
+        mQuery.setHint("search query term");
+    }
+
+    private void setToolbar() {
         Toolbar mToolbar = findViewById(R.id.activity_search_toolbar);
         mToolbar.setTitle("Search Articles");
         mToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24px);
@@ -116,10 +129,19 @@ public class SearchActivity extends AppCompatActivity {
         });
     }
 
-    public void setBeginDate() {
-        mDisplayBeginDate = findViewById(R.id.activity_search_start_date_edit);
+    private void setBeginDate() {
+        mBeginDate = findViewById(R.id.activity_search_start_date_edit);
 
-        mDisplayBeginDate.setOnClickListener(new View.OnClickListener() {
+        // Default date is current date
+        SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
+        Date currentDate = Calendar.getInstance().getTime();
+        mBeginDateApi = sdfToApi.format(currentDate);
+
+        SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
+        mBeginDate.setText(sdfToDisplay.format(currentDate));
+
+
+        mBeginDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
@@ -142,16 +164,25 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                String date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
-                mDisplayBeginDate.setText(date);
+                String beginDate = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year; // Display
+                mBeginDateApi = year + String.format("%02d", month) + String.format("%02d", day); // API
+                mBeginDate.setText(beginDate);
             }
         };
     }
 
-    public void setEndDate() {
-        mDisplayEndDate = findViewById(R.id.activity_search_end_date_edit);
+    private void setEndDate() {
+        mEndDate = findViewById(R.id.activity_search_end_date_edit);
 
-        mDisplayEndDate.setOnClickListener(new View.OnClickListener() {
+        // Default date is current date
+        SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
+        Date currentDate = Calendar.getInstance().getTime();
+        mEndDateApi = sdfToApi.format(currentDate);
+
+        SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
+        mEndDate.setText(sdfToDisplay.format(currentDate));
+
+        mEndDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Calendar calendar = Calendar.getInstance();
@@ -174,9 +205,21 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
-                String date = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
-                mDisplayEndDate.setText(date);
+                String endDate = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year; // Display
+                mEndDateApi = year + String.format("%02d", month) + String.format("%02d", day); // API
+
+                mEndDate.setText(endDate);
             }
         };
+    }
+
+    @Override
+    public void onResponse(SearchResponse searchResponse) {
+
+    }
+
+    @Override
+    public void onFailure() {
+
     }
 }
