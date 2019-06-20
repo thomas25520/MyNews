@@ -2,9 +2,12 @@ package com.mynews.utils;
 
 import android.support.annotation.NonNull;
 
-import com.mynews.data.entities.topStoriesMostPopularOther.Root;
+import com.mynews.callbacks_interfaces.RootCallback;
+import com.mynews.data.entities.top_stories_most_popular_other.Root;
+import com.mynews.data.enums.ArticleTypes;
+import com.mynews.data.enums.PeriodType;
+import com.mynews.data.enums.Section;
 import com.mynews.data.remote.RetrofitManager;
-import com.mynews.myInterface.RootCallback;
 
 import retrofit2.Call;
 import retrofit2.Callback;

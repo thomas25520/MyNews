@@ -11,10 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mynews.R;
+import com.mynews.callbacks_interfaces.RootCallback;
 import com.mynews.controller.activities.WebViewActivity;
 import com.mynews.controller.adapter.RecyclerViewAdapter;
-import com.mynews.data.entities.topStoriesMostPopularOther.Result;
-import com.mynews.myInterface.RootCallback;
+import com.mynews.data.entities.top_stories_most_popular_other.Result;
 import com.mynews.utils.CategoriesCall;
 import com.mynews.utils.RecyclerViewHolderListener;
 

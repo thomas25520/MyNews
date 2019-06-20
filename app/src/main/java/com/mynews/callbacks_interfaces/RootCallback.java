@@ -1,6 +1,6 @@
-package com.mynews.myInterface;
+package com.mynews.callbacks_interfaces;
 
-import com.mynews.data.entities.topStoriesMostPopularOther.Result;
+import com.mynews.data.entities.top_stories_most_popular_other.Result;
 
 import java.util.List;
 

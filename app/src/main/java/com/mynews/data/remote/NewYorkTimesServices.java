@@ -1,7 +1,7 @@
 package com.mynews.data.remote;
 
 import com.mynews.data.entities.search.RootSearch;
-import com.mynews.data.entities.topStoriesMostPopularOther.Root;
+import com.mynews.data.entities.top_stories_most_popular_other.Root;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -29,5 +29,5 @@ public interface NewYorkTimesServices {
     Call<Root> getMostPopularFrom(@Path("articleTypes") String articleTypes, @Path("period") int period, @Query("api-key") String apiKey);
 
     @GET("search/v2/articlesearch.json")
-    Call<RootSearch> getSearch(@Query("q") String Query, @Query("begin_date") String begin_date, @Query("end_date") String end_date, @Query("fq") String FilterQuery, @Query("page") int page, @Query("api-key") String apiKey);
+    Call<RootSearch> getSearch(@Query("q") String Query, @Query("begin_date") String begin_date, @Query("end_date") String end_date, @Query("fq") String FilterQuery, @Query("api-key") String apiKey);
 }

@@ -13,9 +13,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.mynews.R;
+import com.mynews.callbacks_interfaces.RootSearchCallBack;
 import com.mynews.controller.model.Search;
 import com.mynews.data.entities.search.SearchResponse;
-import com.mynews.myInterface.RootSearchCallBack;
 import com.mynews.utils.SearchCall;
 
 import java.text.SimpleDateFormat;
@@ -33,7 +33,7 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     public EditText mQuery;
     private TextView mBeginDate;
     private TextView mEndDate;
-    private String mSection;
+    private static String mSection;
     private String mBeginDateApi;
     private String mEndDateApi;
 
@@ -43,12 +43,12 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
 
     TextView mSearchBtn;
     Search mSearch;
-    private CheckBox mArts;
-    private CheckBox mPolitics;
-    private CheckBox mBusiness;
-    private CheckBox mSports;
-    private CheckBox mEntrepreneurs;
-    private CheckBox mTravels;
+    private static CheckBox mArts;
+    private static CheckBox mPolitics;
+    private static CheckBox mBusiness;
+    private static CheckBox mSports;
+    private static CheckBox mEntrepreneurs;
+    private static CheckBox mTravels;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,32 +82,31 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getSection();
 
                 SearchCall searchCall = new SearchCall();
                 searchCall.search(mThis, mQuery, mBeginDateApi, mEndDateApi);
-
-
-//                String queryTerm = mQueryTerm.getText().toString();
-//                String displayBeginDate = mDisplayBeginDate.getText().toString();
-//                String displayEndDate = mDisplayEndDate.getText().toString();
-
-                //mSearch = new Search(queryTerm, displayBeginDate, displayEndDate, arts, politics, business, sports, entrepreneurs, travels);
-                //SharedPreferencesManager.putSearch(getBaseContext(), Constants.SEARCH_OBJECT, mSearch);
             }
         });
     }
 
-    private void getSection() {
-        // Checkbox is checked or not
-        boolean arts = mArts.isChecked();
-        boolean politics = mPolitics.isChecked();
-        boolean business = mBusiness.isChecked();
-        boolean sports = mSports.isChecked();
-        boolean entrepreneurs = mEntrepreneurs.isChecked();
-        boolean travels = mTravels.isChecked();
+    public static String getSection() {
+        // Checkbox is checked or not return string for api
+        mSection = "";
 
-        // todo fusionner les sections dans mSections pour faire une seule requête
+        if (mArts.isChecked())
+            mSection += "Arts+";
+        if (mPolitics.isChecked())
+            mSection += "Politics+";
+        if (mBusiness.isChecked())
+            mSection += "Business+";
+        if (mSports.isChecked())
+            mSection += "Sports+";
+        if (mEntrepreneurs.isChecked())
+            mSection += "Entrepreneurs+";
+        if (mTravels.isChecked())
+            mSection += "Travels+";
+
+        return mSection;
     }
 
     private void setQueryTerm() {

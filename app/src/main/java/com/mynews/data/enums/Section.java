@@ -1,4 +1,4 @@
-package com.mynews.utils;
+package com.mynews.data.enums;
 
 /**
  * Created by Dutru Thomas on 10/06/2019.

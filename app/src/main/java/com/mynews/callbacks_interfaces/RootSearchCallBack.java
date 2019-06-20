@@ -1,4 +1,4 @@
-package com.mynews.myInterface;
+package com.mynews.callbacks_interfaces;
 
 import com.mynews.data.entities.search.SearchResponse;
 

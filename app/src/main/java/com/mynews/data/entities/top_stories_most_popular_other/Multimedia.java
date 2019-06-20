@@ -1,23 +1,21 @@
-package com.mynews.data.entities.topStoriesMostPopularOther;
+package com.mynews.data.entities.top_stories_most_popular_other;
 
 import com.google.gson.annotations.SerializedName;
 
 /**
- * Created by Dutru Thomas on 12/06/2019.
+ * Created by Dutru Thomas on 06/06/2019.
  */
-public class MediaMetadata {
-
+public class Multimedia {
     @SerializedName("url")
     private String url;
 
-    //getter
+    // Getter
     public String getUrl() {
         return url;
     }
 
-    //setter
+    // Setter
     public void setUrl(String url) {
         this.url = url;
     }
-
 }
