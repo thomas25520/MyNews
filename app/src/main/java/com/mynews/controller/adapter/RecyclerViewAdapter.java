@@ -23,7 +23,7 @@ import java.util.List;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
     private List<Result> mResultList = null;
-    private List<Docs> mDocsList = null;
+    public static List<Docs> mDocsList = null;
     private RecyclerViewHolderListener mListener;
     private boolean isMultimediaRequired = true;
 

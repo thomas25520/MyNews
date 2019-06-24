@@ -13,9 +13,11 @@ import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mynews.R;
 import com.mynews.callbacks_interfaces.RootSearchCallBack;
+import com.mynews.controller.adapter.RecyclerViewAdapter;
 import com.mynews.data.entities.search.SearchResponse;
 import com.mynews.utils.SearchCall;
 
@@ -112,8 +114,20 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
             @Override
             public void onClick(View v) {
 
-                SearchCall searchCall = new SearchCall();
-                searchCall.search(mThis, mQuery, mBeginDateApi, mEndDateApi);
+                if (mQuery.getText().toString().isEmpty()) { // Check query
+                    Toast.makeText(getBaseContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
+                } else if (Integer.valueOf(mBeginDateApi) > Integer.valueOf(mEndDateApi)) {// verify dates
+                    Toast.makeText(getBaseContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
+                } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) { // Checks that at least one category is checked
+                    Toast.makeText(getBaseContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
+                } else { // All condition checked
+                    if (RecyclerViewAdapter.mDocsList != null) { // If no results to display
+                        Toast.makeText(getBaseContext(), "Aucun article, veuillez modifier votre recherche.", Toast.LENGTH_LONG).show();
+                    } else { // launch search
+                        SearchCall searchCall = new SearchCall();
+                        searchCall.search(mThis, mQuery, mBeginDateApi, mEndDateApi);
+                    }
+                }
             }
         });
     }
@@ -133,7 +147,6 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
 
         SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
         mBeginDate.setText(sdfToDisplay.format(currentDate));
-
 
         mBeginDate.setOnClickListener(new View.OnClickListener() {
             @Override
