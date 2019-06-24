@@ -110,14 +110,18 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     }
 
     private void onBtnSearchClickListener() {
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
                 if (mQuery.getText().toString().isEmpty()) { // Check query
                     Toast.makeText(getBaseContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
-                } else if (Integer.valueOf(mBeginDateApi) > Integer.valueOf(mEndDateApi)) {// verify dates
+                } else if (Integer.valueOf(mBeginDateApi) > Integer.valueOf(mEndDateApi)) { // Verify begiDate < endDate
                     Toast.makeText(getBaseContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
+                    if (Integer.valueOf(mBeginDateApi) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApi) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime()))) { // Verify (beginDate & endDate) < current date
+                        Toast.makeText(getBaseContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
+                    }
                 } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) { // Checks that at least one category is checked
                     Toast.makeText(getBaseContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
                 } else { // All condition checked
