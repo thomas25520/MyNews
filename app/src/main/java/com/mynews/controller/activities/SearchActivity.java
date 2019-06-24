@@ -1,11 +1,13 @@
 package com.mynews.controller.activities;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
@@ -14,7 +16,6 @@ import android.widget.TextView;
 
 import com.mynews.R;
 import com.mynews.callbacks_interfaces.RootSearchCallBack;
-import com.mynews.controller.model.Search;
 import com.mynews.data.entities.search.SearchResponse;
 import com.mynews.utils.SearchCall;
 
@@ -33,16 +34,13 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     public EditText mQuery;
     private TextView mBeginDate;
     private TextView mEndDate;
-    private static String mSection;
     private String mBeginDateApi;
     private String mEndDateApi;
-
 
     private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
     private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
 
     TextView mSearchBtn;
-    Search mSearch;
     private static CheckBox mArts;
     private static CheckBox mPolitics;
     private static CheckBox mBusiness;
@@ -50,10 +48,34 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     private static CheckBox mEntrepreneurs;
     private static CheckBox mTravels;
 
+    public static String getSection() {
+        // Checkbox is checked or not return string for api
+        String section = "";
+
+        if (mArts.isChecked())
+            section += "Arts+";
+        if (mPolitics.isChecked())
+            section += "Politics+";
+        if (mBusiness.isChecked())
+            section += "Business+";
+        if (mSports.isChecked())
+            section += "Sports+";
+        if (mEntrepreneurs.isChecked())
+            section += "Entrepreneurs+";
+        if (mTravels.isChecked())
+            section += "Travels+";
+
+        return section;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true); // active arrow back
+        }
     }
 
     @Override
@@ -71,11 +93,18 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
         mEntrepreneurs = findViewById(R.id.activity_search_checkBox_entrepreneurs);
         mTravels = findViewById(R.id.activity_search_checkBox_travels);
 
-        setToolbar();
         setQueryTerm();
         setBeginDate();
         setEndDate();
         onBtnSearchClickListener();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     private void onBtnSearchClickListener() {
@@ -89,43 +118,9 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
         });
     }
 
-    public static String getSection() {
-        // Checkbox is checked or not return string for api
-        mSection = "";
-
-        if (mArts.isChecked())
-            mSection += "Arts+";
-        if (mPolitics.isChecked())
-            mSection += "Politics+";
-        if (mBusiness.isChecked())
-            mSection += "Business+";
-        if (mSports.isChecked())
-            mSection += "Sports+";
-        if (mEntrepreneurs.isChecked())
-            mSection += "Entrepreneurs+";
-        if (mTravels.isChecked())
-            mSection += "Travels+";
-
-        return mSection;
-    }
-
     private void setQueryTerm() {
         mQuery = findViewById(R.id.activity_search_query_term);
         mQuery.setHint("search query term");
-    }
-
-    private void setToolbar() {
-        Toolbar mToolbar = findViewById(R.id.activity_search_toolbar);
-        mToolbar.setTitle("Search Articles");
-        mToolbar.setNavigationIcon(R.drawable.ic_baseline_arrow_back_24px);
-
-        // Return to main activity when click on arrow back button
-        mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                finish();
-            }
-        });
     }
 
     private void setBeginDate() {
@@ -201,12 +196,12 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
 
         // Display user choice on TextView
         mDateSetListenerEnd = new DatePickerDialog.OnDateSetListener() {
+
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 String endDate = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year; // Display
                 mEndDateApi = year + String.format("%02d", month) + String.format("%02d", day); // API
-
                 mEndDate.setText(endDate);
             }
         };
@@ -215,6 +210,9 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     @Override
     public void onResponse(SearchResponse searchResponse) {
 
+        Intent intent = new Intent(this, DisplaySearchActivity.class);
+        intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
+        startActivity(intent);
     }
 
     @Override

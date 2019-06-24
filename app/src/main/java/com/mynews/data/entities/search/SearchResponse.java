@@ -1,5 +1,6 @@
 package com.mynews.data.entities.search;
 
+import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
@@ -22,5 +23,15 @@ public class SearchResponse {
     // Setter
     public void setDocs(List<Docs> docs) {
         this.docs = docs;
+    }
+
+    public String toJson() {
+        Gson gson = new Gson();
+        return gson.toJson(this);
+    }
+
+    public SearchResponse toObject(String json) {
+        Gson gson = new Gson();
+        return gson.fromJson(json, this.getClass());
     }
 }

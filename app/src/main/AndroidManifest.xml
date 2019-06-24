@@ -34,7 +34,10 @@
         </activity>
         <activity
             android:name=".controller.activities.SearchActivity"
-            android:theme="@style/SearchActivityTheme" />
+            android:theme="@style/SearchTheme" />
+        <activity
+            android:name=".controller.activities.DisplaySearchActivity"
+            android:theme="@style/SearchTheme" />
     </application>
 
 </manifest>

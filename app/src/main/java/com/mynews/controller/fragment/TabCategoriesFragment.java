@@ -46,7 +46,7 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
                 categoriesCall.topStoriesHome(new RootCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
-                        recyclerAdapter.setList(result);
+                        recyclerAdapter.setResultList(result);
                     }
 
                     @Override
@@ -60,7 +60,7 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
                 categoriesCall.mostPopular(new RootCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
-                        recyclerAdapter.setList(result);
+                        recyclerAdapter.setResultList(result);
                     }
 
                     @Override
@@ -72,7 +72,7 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
                 categoriesCall.topStoryFrom(new RootCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
-                        recyclerAdapter.setList(result);
+                        recyclerAdapter.setResultList(result);
                     }
 
                     @Override
@@ -100,7 +100,7 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
         };
 
         recyclerAdapter = new RecyclerViewAdapter(new ArrayList<Result>(), listener);
-        RecyclerView rv = view.findViewById(R.id.fragment_tab_categories_recycler_view);
+        RecyclerView rv = view.findViewById(R.id.activity_search_recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(recyclerAdapter);
     }

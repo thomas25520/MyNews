@@ -27,7 +27,7 @@ public class SearchCall {
 
             @Override
             public void onFailure(@NonNull Call<RootSearch> call, @NonNull Throwable t) {
-
+                callBack.onFailure();
             }
         });
     }

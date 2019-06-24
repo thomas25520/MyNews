@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mynews.R;
+import com.mynews.data.entities.search.Docs;
 import com.mynews.data.entities.top_stories_most_popular_other.Result;
 import com.mynews.utils.RecyclerViewHolderListener;
 import com.squareup.picasso.Picasso;
@@ -21,23 +22,43 @@ import java.util.List;
  */
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder> {
 
-    private List<Result> mList;
-    private RecyclerViewHolderListener listener;
+    private List<Result> mResultList = null;
+    private List<Docs> mDocsList = null;
+    private RecyclerViewHolderListener mListener;
     private boolean isMultimediaRequired = true;
 
-    public RecyclerViewAdapter(List<Result> list, RecyclerViewHolderListener listener) {
-        this.mList = list;
-        this.listener = listener;
+    // Constructor
+    public RecyclerViewAdapter(List<Result> resultList, RecyclerViewHolderListener listener) {
+        this.mResultList = resultList;
+        this.mListener = listener;
     }
 
-    public void setList(List<Result> list) {
-        mList = list;
+    public RecyclerViewAdapter() {
+    }
+
+    // SETTER
+    public void setResultList(List<Result> resultList) {
+        mResultList = resultList;
         notifyDataSetChanged(); // refresh data
+    }
+
+    public void setDocsList(List<Docs> docsList) {
+        mDocsList = docsList;
+        notifyDataSetChanged(); // refresh data
+    }
+
+    public void setListener(RecyclerViewHolderListener listener) {
+        this.mListener = listener;
     }
 
     @Override
     public int getItemCount() {
-        return mList.size();
+        if (mResultList == null && mDocsList == null)
+            return 0;
+        else if (mResultList != null)
+            return mResultList.size();
+        else
+            return mDocsList.size();
     }
 
     @NonNull
@@ -51,34 +72,63 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/YYYY");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 
-        final Result result = mList.get(position);
-        if (result.getSubsection() == null) {
-            holder.categories.setText(result.getCategory());
-        } else {
-            if (result.getSubsection().isEmpty()) {
+        if (mResultList != null) {
+            final Result result = mResultList.get(position);
+            if (result.getSubsection() == null) {
                 holder.categories.setText(result.getCategory());
             } else {
-                holder.categories.setText(result.getCategory() + " > " + result.getSubsection());
+                if (result.getSubsection().isEmpty()) {
+                    holder.categories.setText(result.getCategory());
+                } else {
+                    holder.categories.setText(result.getCategory() + " > " + result.getSubsection());
+                }
             }
-        }
 
-        if (isMultimediaRequired) {
-            if (result.hasImage())     // prevents the application from crashing if the article does not contain an image or link
-                Picasso.get().load(result.getMultimedia().get(0).getUrl()).into(holder.picture); // Use picasso library to display picture
+            if (isMultimediaRequired) {
+                if (result.hasImage())     // prevents the application from crashing if the article does not contain an image or link
+                    Picasso.get().load(result.getMultimedia().get(0).getUrl()).into(holder.picture); // Use picasso library to display picture
+            } else {
+                Picasso.get().load(result.getMedia().get(0).getMediaMetadataList().get(0).getUrl()).into(holder.picture);
+            }
+            holder.title.setText(result.getTitle());
+            holder.date.setText(sdf.format(result.getPublishedDate())); // Convert date with SimpleDateFormat
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    mListener.onItemClicked(holder, result, position);
+                }
+            });
         } else {
-            Picasso.get().load(result.getMedia().get(0).getMediaMetadataList().get(0).getUrl()).into(holder.picture);
-        }
+            if (mDocsList != null) {
+                final Docs docs = mDocsList.get(position);
+                if (docs != null && docs.getTitle() != null && docs.getDate() != null) {
+                    if (docs.getSubCategory() == null) {
+                        holder.categories.setText(docs.getCategory());
+                    } else {
+                        if (docs.getSubCategory().isEmpty()) {
+                            holder.categories.setText(docs.getCategory());
+                        } else {
+                            holder.categories.setText(docs.getCategory() + " > " + docs.getSubCategory());
+                        }
+                    }
 
-        holder.title.setText(result.getTitle());
-        holder.date.setText(sdf.format(result.getPublishedDate())); // Convert date with SimpleDateFormat
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onItemClicked(holder, result, position);
+                    if (isMultimediaRequired) {
+                        if (docs.hasImage())
+                            Picasso.get().load(docs.getMultimedia().get(0).getUrl()).into(holder.picture);
+                    }
+                    holder.title.setText(docs.getTitle());
+                    holder.date.setText(sdf.format(docs.getDate()));
+                    holder.itemView.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mListener.onItemClicked(holder, docs, position);
+                        }
+                    });
+                }
             }
-        });
+        }
     }
 
     public void setMultimediaRequired(boolean isMultimediaRequired) {
@@ -90,7 +140,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         private TextView categories;
         private TextView date;
         private TextView title;
-        private TextView subsection;
 
         private MyViewHolder(final View itemView) {
             super(itemView);
@@ -98,7 +147,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
             categories = itemView.findViewById(R.id.fragment_tab_categories_item_categories);
             date = itemView.findViewById(R.id.fragment_tab_categories_item_date);
             title = itemView.findViewById(R.id.fragment_tab_categories_item_title);
-//            subsection = itemView.findViewById(R.id.fragment_tab_categories_item_subsection);
         }
     }
 }

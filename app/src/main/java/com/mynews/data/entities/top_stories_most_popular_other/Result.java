@@ -57,12 +57,6 @@ public class Result {
         return media;
     }
 
-
-    // Setter
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     public String getSubsection() {
         return subsection;
     }
@@ -79,12 +73,17 @@ public class Result {
         return publishedDate;
     }
 
-    public void setSubsection(String subsection) {
-        this.subsection = subsection;
-    }
-
     public List<Multimedia> getMultimedia() {
         return multimedia;
+    }
+
+    // Setter
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public void setSubsection(String subsection) {
+        this.subsection = subsection;
     }
 
     public void setUrl(String url) {
