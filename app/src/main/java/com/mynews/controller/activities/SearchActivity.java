@@ -34,10 +34,10 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     private final SearchActivity mThis = this;
 
     public EditText mQuery;
-    private TextView mBeginDate;
-    private TextView mEndDate;
-    private String mBeginDateApi;
-    private String mEndDateApi;
+    private TextView mBeginDateTextView;
+    private TextView mEndDateTextView;
+    private String mBeginDateApiFormat;
+    private String mEndDateApiFormat;
 
     private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
     private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
@@ -71,34 +71,18 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true); // active arrow back
-        }
-    }
-
-    @Override
     protected void onStart() {
         super.onStart();
         initViews();
     }
 
-    public void initViews() {
-        mSearchBtn = findViewById(R.id.activity_search_search_btn);
-        mArts = findViewById(R.id.activity_search_checkBox_arts);
-        mPolitics = findViewById(R.id.activity_search_checkBox_politics);
-        mBusiness = findViewById(R.id.activity_search_checkBox_business);
-        mSports = findViewById(R.id.activity_search_checkBox_sports);
-        mEntrepreneurs = findViewById(R.id.activity_search_checkBox_entrepreneurs);
-        mTravels = findViewById(R.id.activity_search_checkBox_travels);
-
-        setQueryTerm();
-        setBeginDate();
-        setEndDate();
-        onBtnSearchClickListener();
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true); // active arrow back
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -109,66 +93,71 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
         return super.onOptionsItemSelected(item);
     }
 
-    private void onBtnSearchClickListener() {
-        final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    public void initViews() {
+        mBeginDateTextView = findViewById(R.id.activity_search_start_date_edit);
+        mEndDateTextView = findViewById(R.id.activity_search_end_date_edit);
 
-        mSearchBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mQuery.getText().toString().isEmpty()) { // Check query
-                    Toast.makeText(getBaseContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
-                } else if (Integer.valueOf(mBeginDateApi) > Integer.valueOf(mEndDateApi)) { // Verify begiDate < endDate
-                    Toast.makeText(getBaseContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
-                    if (Integer.valueOf(mBeginDateApi) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApi) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime()))) { // Verify (beginDate & endDate) < current date
-                        Toast.makeText(getBaseContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
-                    }
-                } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) { // Checks that at least one category is checked
-                    Toast.makeText(getBaseContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
-                } else { // All condition checked
-                    if (RecyclerViewAdapter.mDocsList != null) { // If no results to display
-                        Toast.makeText(getBaseContext(), "Aucun article, veuillez modifier votre recherche.", Toast.LENGTH_LONG).show();
-                    } else { // launch search
-                        SearchCall searchCall = new SearchCall();
-                        searchCall.search(mThis, mQuery, mBeginDateApi, mEndDateApi);
-                    }
-                }
-            }
-        });
+        mSearchBtn = findViewById(R.id.activity_search_search_btn);
+        mArts = findViewById(R.id.activity_search_checkBox_arts);
+        mPolitics = findViewById(R.id.activity_search_checkBox_politics);
+        mBusiness = findViewById(R.id.activity_search_checkBox_business);
+        mSports = findViewById(R.id.activity_search_checkBox_sports);
+        mEntrepreneurs = findViewById(R.id.activity_search_checkBox_entrepreneurs);
+        mTravels = findViewById(R.id.activity_search_checkBox_travels);
+
+        initQueryTerm();
+        initBeginDate();
+        initEndDate();
     }
 
-    private void setQueryTerm() {
+    public void runSearch(View view) {
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        // User Error handling
+        if (mQuery.getText().toString().isEmpty()) // Check query
+            Toast.makeText(getBaseContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
+        else if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(mEndDateApiFormat)) { // Verify begiDate < endDate
+            Toast.makeText(getBaseContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
+            if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApiFormat) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime()))) // Verify (beginDate & endDate) < current date
+                Toast.makeText(getBaseContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
+        } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) // Checks that at least one category is checked
+            Toast.makeText(getBaseContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
+        else // All condition checked
+            if (RecyclerViewAdapter.mDocsList != null) // If no results to display
+                Toast.makeText(getBaseContext(), "Aucun article, veuillez modifier votre recherche.", Toast.LENGTH_LONG).show();
+            else { // launch search
+                new SearchCall().search(mThis, mQuery, mBeginDateApiFormat, mEndDateApiFormat);
+            }
+    }
+
+    private void initQueryTerm() {
         mQuery = findViewById(R.id.activity_search_query_term);
         mQuery.setHint("search query term");
     }
 
-    private void setBeginDate() {
-        mBeginDate = findViewById(R.id.activity_search_start_date_edit);
-
+    private void initBeginDate() {
         // Default date is current date
         SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
         Date currentDate = Calendar.getInstance().getTime();
-        mBeginDateApi = sdfToApi.format(currentDate);
+        mBeginDateApiFormat = sdfToApi.format(currentDate);
 
         SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
-        mBeginDate.setText(sdfToDisplay.format(currentDate));
+        mBeginDateTextView.setText(sdfToDisplay.format(currentDate));
+    }
 
-        mBeginDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+    public void setBeginDate(View view) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(
-                        SearchActivity.this,
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        mDateSetListenerBegin,
-                        year, month, day);
-                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-            }
-        });
+        DatePickerDialog dialog = new DatePickerDialog(
+                SearchActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                mDateSetListenerBegin,
+                year, month, day);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
 
         // Display user choice on TextView
         mDateSetListenerBegin = new DatePickerDialog.OnDateSetListener() {
@@ -176,40 +165,35 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 String beginDate = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year; // Display
-                mBeginDateApi = year + String.format("%02d", month) + String.format("%02d", day); // API
-                mBeginDate.setText(beginDate);
+                mBeginDateApiFormat = year + String.format("%02d", month) + String.format("%02d", day); // API
+                mBeginDateTextView.setText(beginDate);
             }
         };
     }
 
-    private void setEndDate() {
-        mEndDate = findViewById(R.id.activity_search_end_date_edit);
-
+    private void initEndDate() {
         // Default date is current date
         SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
         Date currentDate = Calendar.getInstance().getTime();
-        mEndDateApi = sdfToApi.format(currentDate);
+        mEndDateApiFormat = sdfToApi.format(currentDate);
 
         SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
-        mEndDate.setText(sdfToDisplay.format(currentDate));
+        mEndDateTextView.setText(sdfToDisplay.format(currentDate));
+    }
 
-        mEndDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+    public void setEndDate(View view) {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-                DatePickerDialog dialog = new DatePickerDialog(
-                        SearchActivity.this,
-                        android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                        mDateSetListenerEnd,
-                        year, month, day);
-                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-                dialog.show();
-            }
-        });
+        DatePickerDialog dialog = new DatePickerDialog(
+                SearchActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                mDateSetListenerEnd,
+                year, month, day);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
 
         // Display user choice on TextView
         mDateSetListenerEnd = new DatePickerDialog.OnDateSetListener() {
@@ -218,15 +202,14 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
                 month = month + 1;
                 String endDate = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year; // Display
-                mEndDateApi = year + String.format("%02d", month) + String.format("%02d", day); // API
-                mEndDate.setText(endDate);
+                mEndDateApiFormat = year + String.format("%02d", month) + String.format("%02d", day); // API
+                mEndDateTextView.setText(endDate);
             }
         };
     }
 
     @Override
     public void onResponse(SearchResponse searchResponse) {
-
         Intent intent = new Intent(this, DisplaySearchActivity.class);
         intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
         startActivity(intent);
@@ -234,6 +217,6 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
 
     @Override
     public void onFailure() {
-
+        // todo : throw the error
     }
 }
