@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import com.mynews.R;
 import com.mynews.callbacks_interfaces.RootSearchCallBack;
-import com.mynews.controller.adapter.RecyclerViewAdapter;
 import com.mynews.data.entities.search.SearchResponse;
 import com.mynews.utils.SearchCall;
 
@@ -50,7 +49,47 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     private static CheckBox mEntrepreneurs;
     private static CheckBox mTravels;
 
-    public static String getSection() {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null)
+            actionBar.setDisplayHomeAsUpEnabled(true); // active arrow back
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        initViews();
+        initBeginDate();
+        initEndDate();
+    }
+
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void initViews() {
+        mBeginDateTextView = findViewById(R.id.activity_search_start_date_edit);
+        mEndDateTextView = findViewById(R.id.activity_search_end_date_edit);
+        mQuery = findViewById(R.id.activity_search_query_term);
+        mSearchBtn = findViewById(R.id.activity_search_search_btn);
+
+        mArts = findViewById(R.id.activity_search_checkBox_arts);
+        mPolitics = findViewById(R.id.activity_search_checkBox_politics);
+        mBusiness = findViewById(R.id.activity_search_checkBox_business);
+        mSports = findViewById(R.id.activity_search_checkBox_sports);
+        mEntrepreneurs = findViewById(R.id.activity_search_checkBox_entrepreneurs);
+        mTravels = findViewById(R.id.activity_search_checkBox_travels);
+    }
+
+    public String getSection() {
         // Checkbox is checked or not return string for api
         String section = "";
 
@@ -70,46 +109,6 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
         return section;
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        initViews();
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null)
-            actionBar.setDisplayHomeAsUpEnabled(true); // active arrow back
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            finish();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    public void initViews() {
-        mBeginDateTextView = findViewById(R.id.activity_search_start_date_edit);
-        mEndDateTextView = findViewById(R.id.activity_search_end_date_edit);
-
-        mSearchBtn = findViewById(R.id.activity_search_search_btn);
-        mArts = findViewById(R.id.activity_search_checkBox_arts);
-        mPolitics = findViewById(R.id.activity_search_checkBox_politics);
-        mBusiness = findViewById(R.id.activity_search_checkBox_business);
-        mSports = findViewById(R.id.activity_search_checkBox_sports);
-        mEntrepreneurs = findViewById(R.id.activity_search_checkBox_entrepreneurs);
-        mTravels = findViewById(R.id.activity_search_checkBox_travels);
-
-        initQueryTerm();
-        initBeginDate();
-        initEndDate();
-    }
-
     public void runSearch(View view) {
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
@@ -122,17 +121,8 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
                 Toast.makeText(getBaseContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
         } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) // Checks that at least one category is checked
             Toast.makeText(getBaseContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
-        else // All condition checked
-            if (RecyclerViewAdapter.mDocsList != null) // If no results to display
-                Toast.makeText(getBaseContext(), "Aucun article, veuillez modifier votre recherche.", Toast.LENGTH_LONG).show();
-            else { // launch search
-                new SearchCall().search(mThis, mQuery, mBeginDateApiFormat, mEndDateApiFormat);
-            }
-    }
-
-    private void initQueryTerm() {
-        mQuery = findViewById(R.id.activity_search_query_term);
-        mQuery.setHint("search query term");
+        else
+            new SearchCall().search(mThis, mQuery.getText().toString(), getSection(), mBeginDateApiFormat, mEndDateApiFormat);
     }
 
     private void initBeginDate() {
@@ -149,15 +139,7 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog dialog = new DatePickerDialog(
-                SearchActivity.this,
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                mDateSetListenerBegin,
-                year, month, day);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        int day = calendar.get(Calendar.DATE);
 
         // Display user choice on TextView
         mDateSetListenerBegin = new DatePickerDialog.OnDateSetListener() {
@@ -169,6 +151,14 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
                 mBeginDateTextView.setText(beginDate);
             }
         };
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                SearchActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                mDateSetListenerBegin,
+                year, month, day);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 
     private void initEndDate() {
@@ -185,15 +175,7 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog dialog = new DatePickerDialog(
-                SearchActivity.this,
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                mDateSetListenerEnd,
-                year, month, day);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
+        int day = calendar.get(Calendar.DATE);
 
         // Display user choice on TextView
         mDateSetListenerEnd = new DatePickerDialog.OnDateSetListener() {
@@ -206,6 +188,14 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
                 mEndDateTextView.setText(endDate);
             }
         };
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                SearchActivity.this,
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                mDateSetListenerEnd,
+                year, month, day);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
     }
 
     @Override
