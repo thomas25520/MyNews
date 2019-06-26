@@ -14,12 +14,17 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mynews.R;
+import com.mynews.callbacks_interfaces.RootSearchCallBack;
 import com.mynews.controller.adapter.ViewPagerAdapter;
 import com.mynews.controller.fragment.TabCategoriesFragment;
+import com.mynews.data.entities.search.SearchResponse;
+import com.mynews.utils.SearchCall;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RootSearchCallBack {
 
     private DrawerLayout mDrawerLayout;
 
@@ -28,14 +33,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        configureNavigationView();
+        configureNavigationDrawer();
         configureDrawerLayout();
         setToolbar();
         setViewPagerAndTabs();
     }
 
-    // Configure NavigationView
-    private void configureNavigationView() {
+    // Configure NavigationDrawer
+    private void configureNavigationDrawer() {
         NavigationView navigationView = findViewById(R.id.activity_main_nav_view);
         navigationView.setNavigationItemSelectedListener(this);
     }
@@ -95,25 +100,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // select item on Navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         // Handle Navigation Item Click
         int id = item.getItemId();
         switch (id) {
             case R.id.activity_main_drawer_arts:
+                new SearchCall().search(this, "", "arts", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
                 break;
             case R.id.activity_main_drawer_business:
+                new SearchCall().search(this, "", "business", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
                 break;
             case R.id.activity_main_drawer_entrepreneurs:
+                new SearchCall().search(this, "", "entrepreneurs", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
                 break;
             case R.id.activity_main_drawer_politics:
+                new SearchCall().search(this, "", "politics", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
                 break;
             case R.id.activity_main_drawer_sports:
+                new SearchCall().search(this, "", "sports", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
                 break;
             case R.id.activity_main_drawer_travels:
+                new SearchCall().search(this, "", "travels", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
                 break;
             default:
                 break;
         }
         this.mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onResponse(SearchResponse searchResponse) {
+        Intent intent = new Intent(this, DisplaySearchActivity.class);
+        intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
+        startActivity(intent);
+    }
+
+    @Override
+    public void onFailure() {
+        // todo : throw the error
     }
 }
