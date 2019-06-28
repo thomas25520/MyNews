@@ -1,5 +1,6 @@
 package com.mynews.controller.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,6 +9,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -92,9 +94,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_toolbar_search_btn:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));
                 return true;
+            case R.id.activity_main_toolbar_about_btn:
+                configureAboutMenu();
+            case R.id.activity_main_toolbar_help_btn:
+                configureHelpMenu();
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    public void configureHelpMenu() {
+        // todo : change color of quit btn
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("Help")
+                .setMessage("If you need help please contact the developer at the following email address : thomas.dutru@gmail.com")
+                .setCancelable(true)
+                .setPositiveButton("Quitter", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    public void configureAboutMenu() {
+        // todo bug display help before about and change color of quit btn
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        alertDialogBuilder.setTitle("About")
+                .setMessage("App version : 1.0\nAndroid mini : 4.4\nCreated by Dutru thomas\nOpenClassrooms's student dev android")
+                .setCancelable(true)
+                .setPositiveButton("Quitter", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+
     }
 
     // select item on Navigation drawer
