@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.mynews.R;
 import com.mynews.callbacks_interfaces.RootSearchCallBack;
+import com.mynews.controller.fragment.SearchFragment;
 import com.mynews.data.entities.search.SearchResponse;
 import com.mynews.utils.SearchCall;
 
@@ -53,10 +54,13 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.fragment_search);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true); // active arrow back
+
+        SearchFragment searchFragment = SearchFragment.newInstance("SearchActivity");
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_search, searchFragment).commit();
     }
 
     @Override
@@ -78,15 +82,15 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     public void initViews() {
         mBeginDateTextView = findViewById(R.id.activity_search_start_date_edit);
         mEndDateTextView = findViewById(R.id.activity_search_end_date_edit);
-        mQuery = findViewById(R.id.activity_search_query_term);
+        mQuery = findViewById(R.id.notification_search_query_term);
         mSearchBtn = findViewById(R.id.activity_search_search_btn);
 
-        mArts = findViewById(R.id.activity_search_checkBox_arts);
-        mPolitics = findViewById(R.id.activity_search_checkBox_politics);
-        mBusiness = findViewById(R.id.activity_search_checkBox_business);
-        mSports = findViewById(R.id.activity_search_checkBox_sports);
-        mEntrepreneurs = findViewById(R.id.activity_search_checkBox_entrepreneurs);
-        mTravels = findViewById(R.id.activity_search_checkBox_travels);
+        mArts = findViewById(R.id.notification_search_checkBox_arts);
+        mPolitics = findViewById(R.id.notification_search_checkBox_politics);
+        mBusiness = findViewById(R.id.notification_search_checkBox_business);
+        mSports = findViewById(R.id.notification_search_checkBox_sports);
+        mEntrepreneurs = findViewById(R.id.notification_search_checkBox_entrepreneurs);
+        mTravels = findViewById(R.id.notification_search_checkBox_travels);
     }
 
     public String getSection() {
@@ -105,7 +109,6 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
             section += "Entrepreneurs+";
         if (mTravels.isChecked())
             section += "Travels+";
-
         return section;
     }
 

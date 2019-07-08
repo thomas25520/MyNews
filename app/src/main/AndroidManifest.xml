@@ -14,6 +14,13 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <activity
+            android:name=".controller.activities.NotificationActivity"
+            android:parentActivityName=".controller.activities.MainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SearchTheme" />
+
+
+        <activity
             android:name=".controller.activities.WebViewActivity"
             android:launchMode="singleTop"
             android:parentActivityName=".controller.activities.MainActivity"
