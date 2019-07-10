@@ -12,6 +12,9 @@ public class SearchResponse {
     @SerializedName("docs")
     private List<Docs> docs;
 
+    @SerializedName("meta")
+    private List<Meta> meta;
+
     public SearchResponse() {
     }
 

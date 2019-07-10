@@ -3,29 +3,26 @@ package com.mynews.controller.model;
 import com.google.gson.Gson;
 
 /**
- * Created by Dutru Thomas on 14/06/2019.
+ * Created by Dutru Thomas on 08/07/2019.
  */
-public class Search {
-    private String mQueryTerm, mBeginDate, mEndDate;
+public class Notification {
+    private String mQueryTerm;
     private boolean mCheckboxArts, mCheckboxPolitics, mCheckboxBusiness, mCheckboxSports, mCheckboxEntrepreneurs, mCheckboxTravels;
 
     // Constructors
-    private Search(Search search) {
-        this.mQueryTerm = search.getQueryTerm();
-        this.mBeginDate = search.getBeginDate();
-        this.mEndDate = search.getEndDate();
-        this.mCheckboxArts = search.isCheckboxArts();
-        this.mCheckboxPolitics = search.isCheckboxPolitics();
-        this.mCheckboxBusiness = search.isCheckboxBusiness();
-        this.mCheckboxSports = search.isCheckboxSports();
-        this.mCheckboxEntrepreneurs = search.isCheckboxEntrepreneurs();
-        this.mCheckboxTravels = search.isCheckboxTravels();
+    private Notification(Notification notification) {
+
+        this.mQueryTerm = notification.getQueryTerm();
+        this.mCheckboxArts = notification.isCheckboxArts();
+        this.mCheckboxPolitics = notification.isCheckboxPolitics();
+        this.mCheckboxBusiness = notification.isCheckboxBusiness();
+        this.mCheckboxSports = notification.isCheckboxSports();
+        this.mCheckboxEntrepreneurs = notification.isCheckboxEntrepreneurs();
+        this.mCheckboxTravels = notification.isCheckboxTravels();
     }
 
-    public Search(String queryTerm, String beginDate, String endDate, boolean arts, boolean politics, boolean business, boolean sports, boolean entrepreneurs, boolean travels) {
+    public Notification(String queryTerm, boolean arts, boolean politics, boolean business, boolean sports, boolean entrepreneurs, boolean travels) {
         mQueryTerm = queryTerm;
-        mBeginDate = beginDate;
-        mEndDate = endDate;
         mCheckboxArts = arts;
         mCheckboxPolitics = politics;
         mCheckboxBusiness = business;
@@ -35,47 +32,33 @@ public class Search {
     }
 
     // json constructor
-    public Search(String json) {
+    public Notification(String json) {
         Gson gson = new Gson();
-        new Search(gson.fromJson(json, Search.class));
+        new Notification(gson.fromJson(json, Notification.class));
     }
 
-    public Search() {
+    public Notification() {
     }
 
     // Getter
     public String getQueryTerm() {
         return mQueryTerm;
     }
-
-    public String getBeginDate() {
-        return mBeginDate;
-    }
-
-    public String getEndDate() {
-        return mEndDate;
-    }
-
     public boolean isCheckboxArts() {
         return mCheckboxArts;
     }
-
     public boolean isCheckboxPolitics() {
         return mCheckboxPolitics;
     }
-
     public boolean isCheckboxBusiness() {
         return mCheckboxBusiness;
     }
-
     public boolean isCheckboxSports() {
         return mCheckboxSports;
     }
-
     public boolean isCheckboxEntrepreneurs() {
         return mCheckboxEntrepreneurs;
     }
-
     public boolean isCheckboxTravels() {
         return mCheckboxTravels;
     }
@@ -83,12 +66,6 @@ public class Search {
     // Setter
     public void setQueryTerm(String queryTerm) {
         mQueryTerm = queryTerm;
-    }
-    public void setBeginDate(String beginDate) {
-        this.mBeginDate = beginDate;
-    }
-    public void setEndDate(String endDate) {
-        mEndDate = endDate;
     }
     public void setCheckboxArts(boolean checkboxArts) {
         mCheckboxArts = checkboxArts;
@@ -125,8 +102,8 @@ public class Search {
      * @param json
      * @return json string as object
      */
-    public Search jsonToSearch(String json) {
+    public Notification jsonToNotification(String json) {
         Gson gson = new Gson();
-        return gson.fromJson(json, Search.class);
+        return gson.fromJson(json, Notification.class);
     }
 }

@@ -29,7 +29,6 @@ public class Docs {
     @SerializedName("multimedia")
     private List<Multimedia> multimedia;
 
-
     // Getter
     public String getUrl() {
         return url;
