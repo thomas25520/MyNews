@@ -45,11 +45,24 @@ public class SearchFragment extends Fragment { // while implement interface, sho
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        mView = inflater.inflate(R.layout.fragment_notification, container, false);
-
-        chooseInfoToDisplay(activity);
+        switch (activity) {
+            case searchActivity:
+                // build for case & init for each view
+                mView = inflater.inflate(R.layout.fragment_notification, container, false);
+                //initViewForSearchActivity();
+                break;
+            case notificationActivity:
+                mView = inflater.inflate(R.layout.fragment_notification, container, false);
+                initViewForNotificationActivity();
+                break;
+        }
+        //chooseInfoToDisplay(activity);
 
         return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
+    public void runSearch(View view) {
+
     }
 
     private void initViewForSearchActivity() {
@@ -68,7 +81,7 @@ public class SearchFragment extends Fragment { // while implement interface, sho
 
     private void initViewForNotificationActivity() {
         mQuery = mView.findViewById(R.id.notification_search_query_term);
-        mNotificationBtn = mView.findViewById(R.id.notification_btn);
+        mNotificationBtn = mView.findViewById(R.id.fragment_notification_oncePerDayBtn);
 
         mArts = mView.findViewById(R.id.notification_search_checkBox_arts);
         mPolitics = mView.findViewById(R.id.notification_search_checkBox_politics);

@@ -96,10 +96,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 return true;
             case R.id.activity_main_toolbar_notification_btn:
                 startActivity(new Intent(MainActivity.this, NotificationActivity.class));
+                return true;
             case R.id.activity_main_toolbar_about_btn:
                 configureAboutMenu();
+                return true;
             case R.id.activity_main_toolbar_help_btn:
                 configureHelpMenu();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }

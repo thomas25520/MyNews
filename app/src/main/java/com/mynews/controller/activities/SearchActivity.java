@@ -30,7 +30,6 @@ import java.util.Objects;
  * Created by Dutru Thomas on 06/05/2019.
  */
 public class SearchActivity extends AppCompatActivity implements RootSearchCallBack { // while implement interface, should implement method
-
     private final SearchActivity mThis = this;
 
     public EditText mQuery;
@@ -50,25 +49,28 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
     private static CheckBox mEntrepreneurs;
     private static CheckBox mTravels;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_search);
+        //setContentView(R.layout.fragment_search);
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null)
             actionBar.setDisplayHomeAsUpEnabled(true); // active arrow back
 
         SearchFragment searchFragment = SearchFragment.newInstance("SearchActivity");
-        getSupportFragmentManager().beginTransaction().add(R.id.fragment_search, searchFragment).commit();
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_search, searchFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        initViews();
-        initBeginDate();
-        initEndDate();
+        //initViews();
+        //initBeginDate();
+        //initEndDate();
     }
 
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -112,7 +114,7 @@ public class SearchActivity extends AppCompatActivity implements RootSearchCallB
         return section;
     }
 
-    public void runSearch(View view) {
+    public void runSearch(View view) { // Action listener button search on layout
         final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
         // User Error handling
