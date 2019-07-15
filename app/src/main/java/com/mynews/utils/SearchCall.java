@@ -14,18 +14,18 @@ import retrofit2.Response;
  * Created by Dutru Thomas on 17/06/2019.
  */
 public class SearchCall {
-    public void search(final RootSearchCallBack callBack, String query, String fq, String beginDate, String endDate) {
+    public void search(final RootSearchCallBack rootSearchCallBack, String query, String fq, String beginDate, String endDate) {
         Call<RootSearch> call = RetrofitManager.getInstance().getSearch(query, beginDate, endDate, fq, RetrofitManager.getApiKey());
         call.enqueue(new Callback<RootSearch>() {
             @Override
             public void onResponse(@NonNull Call<RootSearch> call, @NonNull Response<RootSearch> response) {
                 if (response.body() != null)
-                    callBack.onResponse(response.body().getSearchResponse());
+                    rootSearchCallBack.onResponse(response.body().getSearchResponse());
             }
 
             @Override
             public void onFailure(@NonNull Call<RootSearch> call, @NonNull Throwable t) {
-                callBack.onFailure();
+                rootSearchCallBack.onFailure();
             }
         });
     }

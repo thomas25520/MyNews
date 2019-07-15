@@ -13,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:hint="search query term"
+        android:hint="@string/search_query_term"
         android:textCursorDrawable="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -38,6 +38,7 @@
         android:layout_marginTop="15dp"
         android:layout_marginEnd="8dp"
         android:text="@string/checkbox_politics"
+        android:checked="true"
         app:layout_constraintEnd_toEndOf="@+id/fragment_notification_query_term"
         app:layout_constraintStart_toEndOf="@+id/fragment_notification_checkBox_arts"
         app:layout_constraintTop_toBottomOf="@+id/fragment_notification_query_term" />
@@ -95,7 +96,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:text="Enable notification (once per day)"
+        android:text="@string/enable_notification"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_notification_checkBox_entrepreneurs" />

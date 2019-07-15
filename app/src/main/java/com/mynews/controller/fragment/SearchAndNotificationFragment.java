@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,6 @@ import android.widget.Toast;
 import com.mynews.R;
 import com.mynews.callbacks_interfaces.RootSearchCallBack;
 import com.mynews.controller.activities.DisplaySearchActivity;
-import com.mynews.controller.activities.SearchActivity;
 import com.mynews.data.entities.search.SearchResponse;
 import com.mynews.utils.SearchCall;
 
@@ -32,9 +32,9 @@ import java.util.Objects;
 /**
  * Created by Dutru Thomas on 06/05/2019.
  */
-public class SearchFragment extends Fragment implements RootSearchCallBack { // while implement interface, should implement method
-    private final String searchActivity = "SearchActivity";
-    private final String notificationActivity = "NotificationActivity";
+public class SearchAndNotificationFragment extends Fragment implements RootSearchCallBack { // while implement interface, should implement method
+    private static final String SEARCH_ACTIVITY = "SearchActivity";
+    private static final String NOTIFICATION_ACTIVITY = "NotificationActivity";
 
     private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
     private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
@@ -53,27 +53,41 @@ public class SearchFragment extends Fragment implements RootSearchCallBack { // 
     private CheckBox mSports;
     private CheckBox mEntrepreneurs;
     private CheckBox mTravels;
-    private String activity;
+    private String mActivityName;
 
     View mView;
 
-    public static SearchFragment newInstance(String activity) {
-        SearchFragment searchFragment = new SearchFragment();
-        Bundle bundle = new Bundle();
-        bundle.putString("activity", activity);
-        searchFragment.activity = activity;
-        return searchFragment;
+    public static SearchAndNotificationFragment newInstance(String activityName) {
+        SearchAndNotificationFragment searchAndNotificationFragment = new SearchAndNotificationFragment();
+        //Bundle bundle = new Bundle();
+        //bundle.putString("mActivityName", mActivityName);
+        searchAndNotificationFragment.mActivityName = activityName;
+        return searchAndNotificationFragment;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        mView = inflater.inflate(R.layout.fragment_search, container, false);
-
-        chooseInfoToDisplay(activity);
-
+        switch (mActivityName) {
+            case SEARCH_ACTIVITY:
+                mView = inflater.inflate(R.layout.fragment_search, container, false);
+                initSearchActivity();
+                break;
+            case NOTIFICATION_ACTIVITY:
+                mView = inflater.inflate(R.layout.fragment_notification, container, false);
+                initViewForNotificationActivity();
+                break;
+            default:
+                break;
+        }
         return mView;
+    }
+
+    private void initSearchActivity() {
+        initViewForSearchActivity();
+        initBeginDate();
+        initEndDate();
+        initButtonsListener();
     }
 
     private void initViewForSearchActivity() {
@@ -102,42 +116,27 @@ public class SearchFragment extends Fragment implements RootSearchCallBack { // 
         mTravels = mView.findViewById(R.id.fragment_notification_checkBox_travels);
     }
 
-    private void chooseInfoToDisplay(String activity) {
-        switch (activity) {
-            case searchActivity:
-                // build for case & init for each view
-                initViewForSearchActivity();
-                initBeginDate();
-                initEndDate();
+    private void initButtonsListener() {
+        mBeginDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setBeginDate();
+            }
+        });
 
-                final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        mEndDateTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setEndDate();
+            }
+        });
 
-                mSearchBtn.setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        // User Error handling
-                        if (mQuery.getText().toString().isEmpty()) // Check query
-                            Toast.makeText(getContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
-                        else if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(mEndDateApiFormat)) { // Verify begiDate < endDate
-                            Toast.makeText(getContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
-                            if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApiFormat) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime()))) // Verify (beginDate & endDate) < current date
-                                Toast.makeText(getContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
-                        } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) // Checks that at least one category is checked
-                            Toast.makeText(getContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
-                        else
-                            new SearchCall().search(SearchFragment.this, mQuery.getText().toString(), getSection(), mBeginDateApiFormat, mEndDateApiFormat);
-                    }
-                });
-
-
-
-                break;
-            case notificationActivity:
-                initViewForNotificationActivity();
-                break;
-        }
+        mSearchBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                actionSearch();
+            }
+        });
     }
 
     public String getSection() {
@@ -160,7 +159,20 @@ public class SearchFragment extends Fragment implements RootSearchCallBack { // 
     }
 
     // User press SEARCH button
-    public void runSearch() {
+    public void actionSearch() {
+        final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+
+        // User Error handling
+        if (mQuery.getText().toString().isEmpty()) // Check query
+            Toast.makeText(getContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
+        else if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(mEndDateApiFormat)) { // Verify beginDate < endDate
+            Toast.makeText(getContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
+            if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApiFormat) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime()))) // Verify (beginDate & endDate) < current date
+                Toast.makeText(getContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
+        } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) // Checks that at least one category is checked
+            Toast.makeText(getContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
+        else
+            new SearchCall().search(this, mQuery.getText().toString(), getSection(), mBeginDateApiFormat, mEndDateApiFormat);
     }
 
     private void initBeginDate() {
@@ -245,6 +257,7 @@ public class SearchFragment extends Fragment implements RootSearchCallBack { // 
 
     @Override
     public void onFailure() {
-        // todo : throw the error
+        Log.i("", "");
+        // FIXME: 15/07/2019 change prototype of onFailure for get in parameter exception throw the error
     }
 }
