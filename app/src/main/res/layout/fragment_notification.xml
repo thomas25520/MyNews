@@ -6,13 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".controller.activities.SearchActivity">
 
-    <FrameLayout
-        android:id="@+id/fragment_notification"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="0dp"></FrameLayout>
-
     <EditText
         android:id="@+id/fragment_notification_query_term"
         android:layout_width="0dp"
@@ -20,7 +13,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:hint="search query term"
+        android:hint="@string/search_query_term"
         android:textCursorDrawable="@color/colorPrimary"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -103,7 +96,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
-        android:text="Enable notification (once per day)"
+        android:text="@string/enable_notification"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/fragment_notification_checkBox_entrepreneurs" />

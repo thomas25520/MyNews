@@ -13,7 +13,7 @@ public class SearchResponse {
     private List<Docs> docs;
 
     @SerializedName("meta")
-    private List<Meta> meta;
+    private Meta meta;
 
     public SearchResponse() {
     }

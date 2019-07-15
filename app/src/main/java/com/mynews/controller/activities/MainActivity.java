@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void configureAboutMenu() {
-        // todo bug display help before about and change color of quit btn
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         alertDialogBuilder.setTitle("About")
                 .setMessage("App version : 1.0\nAndroid mini : 4.4\nCreated by Dutru thomas\nOpenClassrooms's student dev android")
