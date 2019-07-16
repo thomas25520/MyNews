@@ -9,11 +9,11 @@ public class Meta {
     @SerializedName("hits")
     private int hits;
 
-    public int getHits() {
-        return hits/10; // /10 return the number of article, info on API docs
+    public int getNumberOfArticles() {
+        return hits;
     }
 
-    public void setHits(int hits) {
+    public void setNumberOfArticles(int hits) {
         this.hits = hits;
     }
 }
