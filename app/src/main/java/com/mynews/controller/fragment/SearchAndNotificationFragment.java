@@ -195,9 +195,8 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         mDateSetListenerBegin = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String beginDate = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year; // Display
-                mBeginDateApiFormat = year + String.format("%02d", month) + String.format("%02d", day); // API
+                String beginDate = getDisplayDateFormat(year, month, day); // Display
+                mBeginDateApiFormat = getApiDateFormat(year, month, day); // API
                 mBeginDateTextView.setText(beginDate);
             }
         };
@@ -209,6 +208,16 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
                 year, month, day);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
+    }
+
+    public String getDisplayDateFormat(int year, int month, int day) {
+        month = month + 1;
+        return String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year;
+    }
+
+    public String getApiDateFormat(int year, int month, int day) {
+        month = month + 1;
+        return year + String.format("%02d", month) + String.format("%02d", day);
     }
 
     private void initEndDate() {
@@ -232,9 +241,8 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
 
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String endDate = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year; // Display
-                mEndDateApiFormat = year + String.format("%02d", month) + String.format("%02d", day); // API
+                String endDate = getDisplayDateFormat(year, month, day); // Display
+                mEndDateApiFormat = getApiDateFormat(year, month, day); // API
                 mEndDateTextView.setText(endDate);
             }
         };
