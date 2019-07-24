@@ -5,4 +5,5 @@
     <color name="colorYellow">#EFE02D</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorGrey">#C1C1C2</color>
+    <color name="colorDark">#000000</color>
 </resources>

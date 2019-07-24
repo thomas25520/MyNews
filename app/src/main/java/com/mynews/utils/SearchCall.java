@@ -29,5 +29,9 @@ public class SearchCall {
             }
         });
     }
+//
+//    public void test(final RootSearchCallBack rootSearchCallBack) {
+//        rootSearchCallBack.onResponse(new SearchResponse());
+//        rootSearchCallBack.onFailure();
+//    }
 }
-

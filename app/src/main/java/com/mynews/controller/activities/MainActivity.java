@@ -27,7 +27,6 @@ import java.util.Calendar;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RootSearchCallBack {
-
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -39,6 +38,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureDrawerLayout();
         setToolbar();
         setViewPagerAndTabs();
+        // displayNotificationOfTheDay(); // Only for test
+    }
+
+    @Override
+    public void onResponse(SearchResponse searchResponse) {
+//        Log.i("LOG","test avec this OK");
+        Intent intent = new Intent(this, DisplaySearchActivity.class);
+        intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
+        startActivity(intent);
+    }
+
+    @Override
+    public void onFailure() {
+//        Log.i("LOG","test avec this FAIL");
+    }
+
+    private String getCurrentDateFormatToApi() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        return sdf.format(Calendar.getInstance().getTime());
     }
 
     // Configure NavigationDrawer
@@ -135,33 +153,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-
     }
 
     // select item on Navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        // FIXME: 16/07/2019 A revoir pas besoin de faire une recherche passer par getTopStories
         // Handle Navigation Item Click
         int id = item.getItemId();
         switch (id) {
             case R.id.activity_main_drawer_arts:
-                new SearchCall().search(this, "", "arts", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "arts", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_business:
-                new SearchCall().search(this, "", "business", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "business", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_entrepreneurs:
-                new SearchCall().search(this, "", "entrepreneurs", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "entrepreneurs", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_politics:
-                new SearchCall().search(this, "", "politics", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "politics", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_sports:
-                new SearchCall().search(this, "", "sports", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "sports", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_travels:
-                new SearchCall().search(this, "", "travels", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "travels", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             default:
                 break;
@@ -170,15 +187,95 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-    @Override
-    public void onResponse(SearchResponse searchResponse) {
-        Intent intent = new Intent(this, DisplaySearchActivity.class);
-        intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
-        startActivity(intent);
-    }
+//    public void notification() {
+//        // DOC ANDROID
+//        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "test")
+//                .setSmallIcon(R.drawable.ic_news_logo)
+//                .setContentTitle("Nouvelles informations disponible")
+//                .setAutoCancel(true)
+//                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+//
+//        CharSequence name = "test";
+//        String description = "test description";
+//        int importance = NotificationManager.IMPORTANCE_DEFAULT;
+//        NotificationChannel channel = null;
+//
+//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+//            channel = new NotificationChannel("test", name, importance);
+//            channel.setDescription(description);
+//
+//            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+//            notificationManager.createNotificationChannel(channel);
+//        }
+//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+//
+//        notificationManager.notify(1, builder.build()); // Display notification, Id is unique for each notification
+// ------------------------------------------------------------------------------------------------------------------------------
+    // STACKOVERFLOW
+//        Intent notifyIntent = new Intent(this, MyReceiver.class);
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+//        AlarmManager alarmManager = (AlarmManager) getBaseContext().getSystemService(Context.ALARM_SERVICE);
+//        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
+//                5000, pendingIntent);
+// ------------------------------------------------------------------------------------------------------------------------------
 
-    @Override
-    public void onFailure() {
-        // todo : throw the error
-    }
+// DOC ANDROID REPEAT NOTIFICATION AND TIMER
+    // Set the alarm to start at approximately 2:00 p.m.
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.set(Calendar.HOUR, 20); // Not works ? test with : HOUR_OF_DAY
+//        calendar.set(Calendar.MINUTE, 0);
+//        calendar.set(Calendar.SECOND, 0);
+
+// With setInexactRepeating(), you have to use one of the AlarmManager interval
+// constants--in this case, AlarmManager.INTERVAL_DAY.
+//        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(),
+//                AlarmManager.INTERVAL_DAY, pendingIntent);
+//    -------------------------------------------------------------------------------------------------------------------------
+//    }
+
+
+//    private void displayNotificationOfTheDay() {
+    // différence entre extends et implements :
+    // Extend = hériatage on peut extend qu'une class en java car pas d'héritage multiple
+    // Implement = interface, on doit importer et implémenter les méthodes de l'interface (equivalent héritage multiple)
+
+    // ---------------------------------------------------------------------------------------------------------------------
+
+    // TEST new callback passé en paramètre
+//        new SearchCall().test(new RootSearchCallBack() {
+//            @Override
+//            public void onResponse(SearchResponse searchResponse) {
+//                Log.i("LOG","test newCallback passé en paramètre OK");
+//            }
+//
+//            @Override
+//            public void onFailure() {
+//                Log.i("LOG","test newCallback passé en paramètre FAIL");
+//            }
+//        });
+//
+    // -----------------------------------------------------------------------------------------------------------------
+
+    // TEST avec this
+//        new SearchCall().test(this);
+    // Les méthodes onResponse et OnFaillure sont directement importé dans la class MainActivity (this)
+
+    // ------------------------------------------------------------------------------------------------------------
+
+    // TEST callBack crée avant et passé en param
+//        final RootSearchCallBack callback = new RootSearchCallBack() {
+//            @Override
+//            public void onResponse(SearchResponse searchResponse) {
+//                Log.i("LOG", "TEST callBack crée avant et passé en param OK");
+//            }
+//
+//            @Override
+//            public void onFailure() {
+//                Log.i("LOG", "TEST callBack crée avant et passé en param FAIL");
+//            }
+//        };
+//        new SearchCall().test(callback);
+    // -------------------------------------------------------------------------------------------------------------
+//    }
 }

@@ -13,7 +13,7 @@ public class Meta {
         return hits;
     }
 
-    public void setNumberOfArticles(int hits) {
-        this.hits = hits;
+    public void setNumberOfArticles(int numberOfArticles) {
+        this.hits = numberOfArticles;
     }
 }

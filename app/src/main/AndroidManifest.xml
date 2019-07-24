@@ -13,6 +13,17 @@
         android:supportsRtl="true"
         tools:ignore="GoogleAppIndexingWarning">
 
+        <!--Notifications-->
+        <receiver
+            android:name=".utils.MyReceiver"
+            android:enabled="true"
+            android:exported="false"></receiver>
+
+        <!--Notifications-->
+        <service
+            android:name=".utils.MyNewIntentService"
+            android:exported="false"></service>
+
         <activity
             android:name=".controller.activities.NotificationActivity"
             android:parentActivityName=".controller.activities.MainActivity"
