@@ -26,6 +26,7 @@ import com.mynews.R;
 import com.mynews.callbacks_interfaces.RootSearchCallBack;
 import com.mynews.controller.activities.DisplaySearchActivity;
 import com.mynews.data.entities.search.SearchResponse;
+import com.mynews.utils.DateFormatter;
 import com.mynews.utils.MyReceiver;
 import com.mynews.utils.SearchCall;
 import com.mynews.utils.SharedPreferencesManager;
@@ -45,9 +46,6 @@ import static com.mynews.utils.Constants.USER_QUERY;
 public class SearchAndNotificationFragment extends Fragment implements RootSearchCallBack { // while implement interface, should implement method
     private static final String SEARCH_ACTIVITY = "SearchActivity";
     private static final String NOTIFICATION_ACTIVITY = "NotificationActivity";
-
-    private DatePickerDialog.OnDateSetListener mDateSetListenerEnd;
-    private DatePickerDialog.OnDateSetListener mDateSetListenerBegin;
 
     private String mBeginDateApiFormat;
     private String mEndDateApiFormat;
@@ -69,6 +67,10 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
 
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
+
+    SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
+    SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
+    private DateFormatter dateFormatter = new DateFormatter();
 
     public static SearchAndNotificationFragment newInstance(String activityName) {
         SearchAndNotificationFragment searchAndNotificationFragment = new SearchAndNotificationFragment();
@@ -94,35 +96,6 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
                 break;
         }
         return mView;
-    }
-
-    private void setCheckboxUserPreferences() {
-        String userCategoriesPreferences = SharedPreferencesManager.getString(getContext(), USER_CATEGORIES);
-//        Log.i("test"," " + string);
-
-        if (userCategoriesPreferences.contains("Arts"))
-            mArts.setChecked(true);
-        else mArts.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Sports"))
-            mSports.setChecked(true);
-        else mSports.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Travels"))
-            mTravels.setChecked(true);
-        else mTravels.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Politics"))
-            mPolitics.setChecked(true);
-        else mPolitics.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Business"))
-            mBusiness.setChecked(true);
-        else mBusiness.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Entrepreneurs"))
-            mEntrepreneurs.setChecked(true);
-        else mEntrepreneurs.setChecked(false);
     }
 
     private void initSearchActivity() {
@@ -176,24 +149,6 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
                 }
             }
         });
-    }
-
-    private void initAlarmManager() {
-        alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
-        Intent notifyIntent = new Intent(getContext(), MyReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(getContext(), 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private void enableAlarm() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR, 9);
-        calendar.set(Calendar.MINUTE, 30);
-        calendar.set(Calendar.SECOND, 0);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5000, pendingIntent);
-        // Difference between setInexactRepeating & setExactRepeating
-        // setInexactRepeating : The system chooses the appropriate time to display the notification
-        // setExactRepeating : The system displays the notification no matter what happens
     }
 
     private void disableAlarm() {
@@ -270,13 +225,12 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
 
     // User press SEARCH button
     public void actionSearch() {
-        final SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         // User Error handling
         if (mQuery.getText().toString().isEmpty()) // Check query
             Toast.makeText(getContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
         else if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(mEndDateApiFormat)) { // Verify beginDate < endDate
             Toast.makeText(getContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
-            if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApiFormat) > Integer.valueOf(sdf.format(Calendar.getInstance().getTime()))) // Verify (beginDate & endDate) < current date
+            if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(sdfToApi.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApiFormat) > Integer.valueOf(sdfToApi.format(Calendar.getInstance().getTime()))) // Verify (beginDate & endDate) < current date
                 Toast.makeText(getContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
         } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) // Checks that at least one category is checked
             Toast.makeText(getContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
@@ -286,11 +240,9 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
 
     private void initBeginDate() {
         // Default date is current date
-        SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
         Date currentDate = Calendar.getInstance().getTime();
         mBeginDateApiFormat = sdfToApi.format(currentDate);
 
-        SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
         mBeginDateTextView.setText(sdfToDisplay.format(currentDate));
     }
 
@@ -301,41 +253,31 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         int day = calendar.get(Calendar.DATE);
 
         // Display user choice on TextView
-        mDateSetListenerBegin = new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog.OnDateSetListener dateSetListenerBegin = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String beginDate = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year; // Display
-                mBeginDateApiFormat = year + String.format("%02d", month) + String.format("%02d", day); // API
+
+                String beginDate = dateFormatter.getDisplayDateFormat(year, month, day);
+                mBeginDateApiFormat = dateFormatter.getApiDateFormat(year, month, day);
                 mBeginDateTextView.setText(beginDate);
             }
         };
 
         DatePickerDialog dialog = new DatePickerDialog(
-                getContext(),
+                Objects.requireNonNull(getContext()),
                 android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                mDateSetListenerBegin,
+                dateSetListenerBegin,
                 year, month, day);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
 
-    public String getDisplayDateFormat(int year, int month, int day) {
-        return String.format("%02d", day) + "/" + String.format("%02d", month + 1) + "/" + year;
-    }
-
-    // Why Month + 1 ? : In docs adroid, month begin at 0, day begin at 1
-    public String getApiDateFormat(int year, int month, int day) {
-        return year + String.format("%02d", month + 1) + String.format("%02d", day);
-    }
-
     private void initEndDate() {
         // Default date is current date
-        SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
+
         Date currentDate = Calendar.getInstance().getTime();
         mEndDateApiFormat = sdfToApi.format(currentDate);
 
-        SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
         mEndDateTextView.setText(sdfToDisplay.format(currentDate));
     }
 
@@ -346,25 +288,73 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         int day = calendar.get(Calendar.DATE);
 
         // Display user choice on TextView
-        mDateSetListenerEnd = new DatePickerDialog.OnDateSetListener() {
+        DatePickerDialog.OnDateSetListener dateSetListenerEnd = new DatePickerDialog.OnDateSetListener() {
 
             @Override
             public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                month = month + 1;
-                String endDate = String.format("%02d", day) + "/" + String.format("%02d", month) + "/" + year; // Display
-                mEndDateApiFormat = year + String.format("%02d", month) + String.format("%02d", day); // API
+                String endDate = dateFormatter.getDisplayDateFormat(year, month, day);
+
+                mEndDateApiFormat = dateFormatter.getApiDateFormat(year, month, day);
                 mEndDateTextView.setText(endDate);
             }
         };
 
         DatePickerDialog dialog = new DatePickerDialog(
-                getContext(),
+                Objects.requireNonNull(getContext()),
                 android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                mDateSetListenerEnd,
+                dateSetListenerEnd,
                 year, month, day);
         Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
     }
+
+    private void initAlarmManager() {
+        alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
+        Intent notifyIntent = new Intent(getContext(), MyReceiver.class);
+        pendingIntent = PendingIntent.getBroadcast(getContext(), 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+    }
+
+    private void enableAlarm() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR, 9);
+        calendar.set(Calendar.MINUTE, 30);
+        calendar.set(Calendar.SECOND, 0);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5000, pendingIntent);
+        // Difference between setInexactRepeating & setExactRepeating
+        // setInexactRepeating : The system chooses the appropriate time to display the notification
+        // setExactRepeating : The system displays the notification no matter what happens
+    }
+
+    private void setCheckboxUserPreferences() {
+        String userCategoriesPreferences = SharedPreferencesManager.getString(getContext(), USER_CATEGORIES);
+//        Log.i("test"," " + string);
+
+        if (userCategoriesPreferences.contains("Arts"))
+            mArts.setChecked(true);
+        else mArts.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Sports"))
+            mSports.setChecked(true);
+        else mSports.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Travels"))
+            mTravels.setChecked(true);
+        else mTravels.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Politics"))
+            mPolitics.setChecked(true);
+        else mPolitics.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Business"))
+            mBusiness.setChecked(true);
+        else mBusiness.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Entrepreneurs"))
+            mEntrepreneurs.setChecked(true);
+        else mEntrepreneurs.setChecked(false);
+    }
+
 
     @Override
     public void onResponse(SearchResponse searchResponse) {
