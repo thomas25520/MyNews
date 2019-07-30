@@ -34,7 +34,7 @@ public class MyReceiver extends BroadcastReceiver {
         new SearchCall().search(new RootSearchCallBack() {
             @Override
             public void onResponse(SearchResponse searchResponse) {
-                createNotification(searchResponse.getMeta().getNumberOfArticles() + " nouveaux articles disponibles", "");
+                createNotification(getNotificationTitle(searchResponse.getMeta().getNumberOfArticles()));
             }
 
             @Override
@@ -46,11 +46,10 @@ public class MyReceiver extends BroadcastReceiver {
         // todo faire test unitaire la dessus
     }
 
-    private void createNotification(String title, String message) {
+    private void createNotification(String title) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "chanel_1")
                 .setSmallIcon(R.drawable.ic_news_logo)
                 .setContentTitle(title) // Set notification title
-                .setContentText(message) // Set notification message
                 .setAutoCancel(true)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
@@ -69,5 +68,16 @@ public class MyReceiver extends BroadcastReceiver {
         // Display notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(1, builder.build()); // Id is unique for each notification
+    }
+
+    public String getNotificationTitle(int nbArticles) {
+        String title;
+        if (nbArticles == 0)
+            title = "Aucun article disponible";
+        else if (nbArticles == 1)
+            title = "1 nouvel article disponible";
+        else title = nbArticles + " nouveaux articles disponibles";
+
+        return title;
     }
 }

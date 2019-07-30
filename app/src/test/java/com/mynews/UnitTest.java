@@ -1,30 +1,42 @@
 package com.mynews;
 
-import com.mynews.controller.fragment.SearchAndNotificationFragment;
+import com.mynews.utils.DateFormatter;
+import com.mynews.utils.MyReceiver;
 
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * @see <a href="http://d.android.com/tools/testing">Testing documentation</a>
- */
 public class UnitTest {
-    SearchAndNotificationFragment mSearchAndNotificationFragment = new SearchAndNotificationFragment();
+    private DateFormatter dateFormatter = new DateFormatter();
 
     @Test
     public void getDisplayDateFormatTest() {
-        String actual = mSearchAndNotificationFragment.getDisplayDateFormat(2019, 0, 6);
+        String actual = dateFormatter.getDisplayDateFormat(2019, 0, 6);
         String expected = "06/01/2019";
         assertEquals(expected, actual);
     }
 
     @Test
     public void getApiDateFormatTest() {
-        String actual = mSearchAndNotificationFragment.getApiDateFormat(2019, 0, 6);
+        String actual = dateFormatter.getApiDateFormat(2019, 0, 6);
         String expected = "20190106";
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void getNotificationTitle() {
+        MyReceiver receiver = new MyReceiver();
+        String actual = receiver.getNotificationTitle(0);
+        String expected = "Aucun article disponible";
+        assertEquals(expected, actual);
+
+        actual = receiver.getNotificationTitle(1);
+        expected = "1 nouvel article disponible";
+        assertEquals(expected, actual);
+
+        actual = receiver.getNotificationTitle(2);
+        expected = "2 nouveaux articles disponibles";
         assertEquals(expected, actual);
     }
 }

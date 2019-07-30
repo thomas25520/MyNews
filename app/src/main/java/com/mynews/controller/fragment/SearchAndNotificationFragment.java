@@ -11,11 +11,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Switch;
@@ -46,15 +49,15 @@ import static com.mynews.utils.Constants.USER_QUERY;
 public class SearchAndNotificationFragment extends Fragment implements RootSearchCallBack { // while implement interface, should implement method
     private static final String SEARCH_ACTIVITY = "SearchActivity";
     private static final String NOTIFICATION_ACTIVITY = "NotificationActivity";
-
-    private String mBeginDateApiFormat;
-    private String mEndDateApiFormat;
-
     public EditText mQuery;
     public TextView mBeginDateTextView;
     public TextView mEndDateTextView;
     public TextView mSearchBtn;
     public Switch mNotificationBtn;
+    SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
+    SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
+    private String mBeginDateApiFormat;
+    private String mEndDateApiFormat;
     private CheckBox mArts;
     private CheckBox mPolitics;
     private CheckBox mBusiness;
@@ -62,14 +65,9 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
     private CheckBox mEntrepreneurs;
     private CheckBox mTravels;
     private String mActivityName;
-
     private View mView;
-
     private AlarmManager alarmManager;
     private PendingIntent pendingIntent;
-
-    SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
-    SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
     private DateFormatter dateFormatter = new DateFormatter();
 
     public static SearchAndNotificationFragment newInstance(String activityName) {
@@ -106,53 +104,10 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
     }
 
     private void initNotificationActivity() {
-        if (SharedPreferencesManager.getBoolean(getContext(), USER_NOTIFICATION_BTN)) {
-            mNotificationBtn.setChecked(true);
-            setCheckboxUserPreferences();
-        } else {
-            mNotificationBtn.setChecked(false);
-            setCheckboxUserPreferences();
-        }
-
-        if (!SharedPreferencesManager.getString(getContext(), USER_QUERY).isEmpty())
-            mQuery.setText(SharedPreferencesManager.getString(getContext(), USER_QUERY));
-
-
-        mNotificationBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Set user notification preferences when click on notificationBtn
-                if (mNotificationBtn.isChecked()) {
-                    if (mQuery.getText().toString().isEmpty()) {
-                        Toast.makeText(getContext(), "Merci d'entrer un mot clé", Toast.LENGTH_SHORT).show();
-                        mNotificationBtn.setChecked(false);
-
-                    } else if (getSection().isEmpty()) {
-                        Toast.makeText(getContext(), "Merci de cocher au moins une catégorie", Toast.LENGTH_SHORT).show();
-                        mNotificationBtn.setChecked(false);
-
-                    } else {
-                        // turn alarm ON
-                        enableAlarm();
-                        Toast.makeText(getContext(), "Notifications activées", Toast.LENGTH_SHORT).show();
-
-                        SharedPreferencesManager.putString(getContext(), USER_QUERY, mQuery.getText().toString());
-                        SharedPreferencesManager.putString(getContext(), USER_CATEGORIES, getSection());
-                        SharedPreferencesManager.putBoolean(getContext(), USER_NOTIFICATION_BTN, true);
-                    }
-
-                } else {
-                    // turn alarm OFF
-                    disableAlarm();
-                    Toast.makeText(getContext(), "Notifications désactivées", Toast.LENGTH_SHORT).show();
-                    SharedPreferencesManager.putBoolean(getContext(), USER_NOTIFICATION_BTN, false);
-                }
-            }
-        });
-    }
-
-    private void disableAlarm() {
-        alarmManager.cancel(pendingIntent);
+        queryUserPreferences();
+        categoriesPosition();
+        setCategoriesPreferences();
+        oncePerDayBtnPosition();
     }
 
     private void initViewForSearchActivity() {
@@ -221,6 +176,79 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         if (mTravels.isChecked())
             section += "Travels+";
         return section;
+    }
+
+    public void queryUserPreferences() {
+        if (!SharedPreferencesManager.getString(getContext(), USER_QUERY).isEmpty())
+            mQuery.setText(SharedPreferencesManager.getString(getContext(), USER_QUERY));
+
+        mQuery.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                SharedPreferencesManager.putString(getContext(), USER_QUERY, s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+    }
+
+    public void categoriesPosition() {
+        CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferencesManager.putString(getContext(), USER_CATEGORIES, getSection());
+            }
+        };
+        mArts.setOnCheckedChangeListener(listener);
+        mPolitics.setOnCheckedChangeListener(listener);
+        mBusiness.setOnCheckedChangeListener(listener);
+        mSports.setOnCheckedChangeListener(listener);
+        mEntrepreneurs.setOnCheckedChangeListener(listener);
+        mTravels.setOnCheckedChangeListener(listener);
+    }
+
+    public void oncePerDayBtnPosition() {
+        if (SharedPreferencesManager.getBoolean(getContext(), USER_NOTIFICATION_BTN)) {
+            mNotificationBtn.setChecked(true);
+        } else {
+            mNotificationBtn.setChecked(false);
+        }
+
+        final CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    if (mQuery.getText().toString().isEmpty()) {
+                        Toast.makeText(getContext(), "Merci d'entrer un mot clé", Toast.LENGTH_SHORT).show();
+                        mNotificationBtn.setChecked(false);
+
+                    } else if (getSection().isEmpty()) {
+                        Toast.makeText(getContext(), "Merci de cocher au moins une catégorie", Toast.LENGTH_SHORT).show();
+                        mNotificationBtn.setChecked(false);
+
+                    } else {
+                        // turn alarm ON
+                        enableAlarm();
+                        Toast.makeText(getContext(), "Notifications activées", Toast.LENGTH_SHORT).show();
+                        SharedPreferencesManager.putBoolean(getContext(), USER_NOTIFICATION_BTN, true);
+                    }
+
+                } else {
+                    // turn alarm OFF
+                    disableAlarm();
+                    Toast.makeText(getContext(), "Notifications désactivées", Toast.LENGTH_SHORT).show();
+                    SharedPreferencesManager.putBoolean(getContext(), USER_NOTIFICATION_BTN, false);
+                }
+            }
+        };
+        mNotificationBtn.setOnCheckedChangeListener(listener);
     }
 
     // User press SEARCH button
@@ -320,13 +348,17 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         calendar.set(Calendar.HOUR, 9);
         calendar.set(Calendar.MINUTE, 30);
         calendar.set(Calendar.SECOND, 0);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 5000, pendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 86400000, pendingIntent); // 1X / Day
         // Difference between setInexactRepeating & setExactRepeating
         // setInexactRepeating : The system chooses the appropriate time to display the notification
         // setExactRepeating : The system displays the notification no matter what happens
     }
 
-    private void setCheckboxUserPreferences() {
+    private void disableAlarm() {
+        alarmManager.cancel(pendingIntent);
+    }
+
+    private void setCategoriesPreferences() {
         String userCategoriesPreferences = SharedPreferencesManager.getString(getContext(), USER_CATEGORIES);
 //        Log.i("test"," " + string);
 
@@ -354,7 +386,6 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
             mEntrepreneurs.setChecked(true);
         else mEntrepreneurs.setChecked(false);
     }
-
 
     @Override
     public void onResponse(SearchResponse searchResponse) {

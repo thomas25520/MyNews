@@ -27,6 +27,7 @@ import java.util.Calendar;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RootSearchCallBack {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -55,7 +56,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private String getCurrentDateFormatToApi() {
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         return sdf.format(Calendar.getInstance().getTime());
     }
 
