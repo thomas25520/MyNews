@@ -104,8 +104,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void configureHelpMenu() {
-        // todo : change color of quit btn
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.AlertDialog);
         alertDialogBuilder.setTitle("Help")
                 .setMessage("If you need help please contact the developer at the following email address : thomas.dutru@gmail.com")
                 .setCancelable(true)
@@ -119,8 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void configureAboutMenu() {
-        // todo bug display help before about and change color of quit btn
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.AlertDialog);
         alertDialogBuilder.setTitle("About")
                 .setMessage("App version : 1.0\nAndroid mini : 4.4\nCreated by Dutru thomas\nOpenClassrooms's student dev android")
                 .setCancelable(true)
