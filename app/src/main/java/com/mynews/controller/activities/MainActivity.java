@@ -127,8 +127,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void configureHelpMenu() {
-        // todo : change color of quit btn
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.AlertDialog);
         alertDialogBuilder.setTitle("Help")
                 .setMessage("If you need help please contact the developer at the following email address : thomas.dutru@gmail.com")
                 .setCancelable(true)
@@ -142,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void configureAboutMenu() {
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.AlertDialog);
         alertDialogBuilder.setTitle("About")
                 .setMessage("App version : 1.0\nAndroid mini : 4.4\nCreated by Dutru thomas\nOpenClassrooms's student dev android")
                 .setCancelable(true)
@@ -212,7 +211,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        notificationManager.notify(1, builder.build()); // Display notification, Id is unique for each notification
 // ------------------------------------------------------------------------------------------------------------------------------
     // STACKOVERFLOW
-//        Intent notifyIntent = new Intent(this, MyReceiver.class);
+//        Intent notifyIntent = new Intent(this, MyNotificationReceiver.class);
 //        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 //        AlarmManager alarmManager = (AlarmManager) getBaseContext().getSystemService(Context.ALARM_SERVICE);
 //        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),

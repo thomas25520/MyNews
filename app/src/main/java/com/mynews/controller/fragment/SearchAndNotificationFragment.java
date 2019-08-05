@@ -3,8 +3,10 @@ package com.mynews.controller.fragment;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -30,7 +32,7 @@ import com.mynews.callbacks_interfaces.RootSearchCallBack;
 import com.mynews.controller.activities.DisplaySearchActivity;
 import com.mynews.data.entities.search.SearchResponse;
 import com.mynews.utils.DateFormatter;
-import com.mynews.utils.MyReceiver;
+import com.mynews.utils.MyNotificationReceiver;
 import com.mynews.utils.SearchCall;
 import com.mynews.utils.SharedPreferencesManager;
 
@@ -66,9 +68,9 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
     private CheckBox mTravels;
     private String mActivityName;
     private View mView;
-    private AlarmManager alarmManager;
-    private PendingIntent pendingIntent;
-    private DateFormatter dateFormatter = new DateFormatter();
+    private AlarmManager mAlarmManager;
+    private PendingIntent mPendingIntent;
+    private DateFormatter mDateFormatter = new DateFormatter();
 
     public static SearchAndNotificationFragment newInstance(String activityName) {
         SearchAndNotificationFragment searchAndNotificationFragment = new SearchAndNotificationFragment();
@@ -88,7 +90,6 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
                 mView = inflater.inflate(R.layout.fragment_notification, container, false);
                 initViewForNotificationActivity();
                 initNotificationActivity();
-                initAlarmManager();
                 break;
             default:
                 break;
@@ -96,18 +97,12 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         return mView;
     }
 
+    // SEARCH PART
     private void initSearchActivity() {
         initViewForSearchActivity();
         initBeginDate();
         initEndDate();
         initButtonsListener();
-    }
-
-    private void initNotificationActivity() {
-        queryUserPreferences();
-        categoriesPosition();
-        setCategoriesPreferences();
-        oncePerDayBtnPosition();
     }
 
     private void initViewForSearchActivity() {
@@ -122,18 +117,6 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         mSports = mView.findViewById(R.id.fragment_search_checkBox_sports);
         mEntrepreneurs = mView.findViewById(R.id.fragment_search_checkBox_entrepreneurs);
         mTravels = mView.findViewById(R.id.fragment_search_checkBox_travels);
-    }
-
-    private void initViewForNotificationActivity() {
-        mQuery = mView.findViewById(R.id.fragment_notification_query_term);
-        mNotificationBtn = mView.findViewById(R.id.fragment_notification_oncePerDayBtn);
-
-        mArts = mView.findViewById(R.id.fragment_notification_checkBox_arts);
-        mPolitics = mView.findViewById(R.id.fragment_notification_checkBox_politics);
-        mBusiness = mView.findViewById(R.id.fragment_notification_checkBox_business);
-        mSports = mView.findViewById(R.id.fragment_notification_checkBox_sports);
-        mEntrepreneurs = mView.findViewById(R.id.fragment_notification_checkBox_entrepreneurs);
-        mTravels = mView.findViewById(R.id.fragment_notification_checkBox_travels);
     }
 
     private void initButtonsListener() {
@@ -159,23 +142,123 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         });
     }
 
-    public String getSection() {
-        // Checkbox is checked or not return string for api
-        String section = "";
+    private void initBeginDate() {
+        // Default date is current date
+        Date currentDate = Calendar.getInstance().getTime();
+        mBeginDateApiFormat = sdfToApi.format(currentDate);
 
-        if (mArts.isChecked())
-            section += "Arts+";
-        if (mPolitics.isChecked())
-            section += "Politics+";
-        if (mBusiness.isChecked())
-            section += "Business+";
-        if (mSports.isChecked())
-            section += "Sports+";
-        if (mEntrepreneurs.isChecked())
-            section += "Entrepreneurs+";
-        if (mTravels.isChecked())
-            section += "Travels+";
-        return section;
+        mBeginDateTextView.setText(sdfToDisplay.format(currentDate));
+    }
+
+    public void setBeginDate() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DATE);
+
+        // Display user choice on TextView
+        DatePickerDialog.OnDateSetListener dateSetListenerBegin = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+
+                String beginDate = mDateFormatter.getDisplayDateFormat(year, month, day);
+                mBeginDateApiFormat = mDateFormatter.getApiDateFormat(year, month, day);
+                mBeginDateTextView.setText(beginDate);
+            }
+        };
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                Objects.requireNonNull(getContext()),
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                dateSetListenerBegin,
+                year, month, day);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    private void initEndDate() {
+        // Default date is current date
+
+        Date currentDate = Calendar.getInstance().getTime();
+        mEndDateApiFormat = sdfToApi.format(currentDate);
+
+        mEndDateTextView.setText(sdfToDisplay.format(currentDate));
+    }
+
+    public void setEndDate() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DATE);
+
+        // Display user choice on TextView
+        DatePickerDialog.OnDateSetListener dateSetListenerEnd = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                String endDate = mDateFormatter.getDisplayDateFormat(year, month, day);
+
+                mEndDateApiFormat = mDateFormatter.getApiDateFormat(year, month, day);
+                mEndDateTextView.setText(endDate);
+            }
+        };
+
+        DatePickerDialog dialog = new DatePickerDialog(
+                Objects.requireNonNull(getContext()),
+                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
+                dateSetListenerEnd,
+                year, month, day);
+        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        dialog.show();
+    }
+
+    // User press SEARCH button
+    public void actionSearch() {
+        // User Error handling
+        if (mQuery.getText().toString().isEmpty()) // Check query
+            Toast.makeText(getContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
+        else if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(mEndDateApiFormat)) { // Verify beginDate < endDate
+            Toast.makeText(getContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
+            if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(sdfToApi.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApiFormat) > Integer.valueOf(sdfToApi.format(Calendar.getInstance().getTime()))) // Verify (beginDate & endDate) < current date
+                Toast.makeText(getContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
+        } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) // Checks that at least one category is checked
+            Toast.makeText(getContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
+        else
+            new SearchCall().search(this, mQuery.getText().toString(), getSection(), mBeginDateApiFormat, mEndDateApiFormat);
+    }
+
+    @Override
+    public void onResponse(SearchResponse searchResponse) {
+        Intent intent = new Intent(getContext(), DisplaySearchActivity.class);
+        intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
+        startActivity(intent);
+    }
+
+    @Override
+    public void onFailure() {
+        Log.i("", "");
+        // FIXME: 15/07/2019 change prototype of onFailure for get in parameter exception throw the error
+    }
+
+    // NOTIFICATION PART
+    private void initNotificationActivity() {
+        queryUserPreferences();
+        categoriesPosition();
+        setCategoriesPreferences();
+        oncePerDayBtnPosition();
+        enableAlarm();
+    }
+
+    private void initViewForNotificationActivity() {
+        mQuery = mView.findViewById(R.id.fragment_notification_query_term);
+        mNotificationBtn = mView.findViewById(R.id.fragment_notification_oncePerDayBtn);
+
+        mArts = mView.findViewById(R.id.fragment_notification_checkBox_arts);
+        mPolitics = mView.findViewById(R.id.fragment_notification_checkBox_politics);
+        mBusiness = mView.findViewById(R.id.fragment_notification_checkBox_business);
+        mSports = mView.findViewById(R.id.fragment_notification_checkBox_sports);
+        mEntrepreneurs = mView.findViewById(R.id.fragment_notification_checkBox_entrepreneurs);
+        mTravels = mView.findViewById(R.id.fragment_notification_checkBox_travels);
     }
 
     public void queryUserPreferences() {
@@ -214,7 +297,71 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         mTravels.setOnCheckedChangeListener(listener);
     }
 
+    // Change time to display the notification
+    private void scheduleNotification(int hour, int minute, int second, long intervalDay) {
+        Intent notifyIntent = new Intent(getContext(), MyNotificationReceiver.class);
+        mPendingIntent = PendingIntent.getBroadcast(getContext(), 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(System.currentTimeMillis());
+        calendar.set(Calendar.HOUR_OF_DAY, hour);
+        calendar.set(Calendar.MINUTE, minute);
+        calendar.set(Calendar.SECOND, second);
+
+        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, mPendingIntent);
+    }
+
+    private void enableAlarm() {
+        scheduleNotification(9, 30, 0, AlarmManager.INTERVAL_DAY);
+        keepNotificationAfterRestart();
+    }
+
+    // Prevent notification disable if device is reboot
+    private void keepNotificationAfterRestart() {
+        ComponentName receiver = new ComponentName(getContext(), MyNotificationReceiver.class);
+        PackageManager pm = getContext().getPackageManager();
+
+        pm.setComponentEnabledSetting(receiver,
+                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+                PackageManager.DONT_KILL_APP);
+    }
+
+    private void disableAlarm() {
+//        mAlarmManager.cancel(mPendingIntent);
+    }
+
+    private void setCategoriesPreferences() {
+        String userCategoriesPreferences = SharedPreferencesManager.getString(getContext(), USER_CATEGORIES);
+//        Log.i("test"," " + string);
+
+        if (userCategoriesPreferences.contains("Arts"))
+            mArts.setChecked(true);
+        else mArts.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Sports"))
+            mSports.setChecked(true);
+        else mSports.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Travels"))
+            mTravels.setChecked(true);
+        else mTravels.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Politics"))
+            mPolitics.setChecked(true);
+        else mPolitics.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Business"))
+            mBusiness.setChecked(true);
+        else mBusiness.setChecked(false);
+
+        if (userCategoriesPreferences.contains("Entrepreneurs"))
+            mEntrepreneurs.setChecked(true);
+        else mEntrepreneurs.setChecked(false);
+    }
+
     public void oncePerDayBtnPosition() {
+        // Set notification btn position when user open notification menu
         if (SharedPreferencesManager.getBoolean(getContext(), USER_NOTIFICATION_BTN)) {
             mNotificationBtn.setChecked(true);
         } else {
@@ -251,152 +398,40 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         mNotificationBtn.setOnCheckedChangeListener(listener);
     }
 
-    // User press SEARCH button
-    public void actionSearch() {
-        // User Error handling
-        if (mQuery.getText().toString().isEmpty()) // Check query
-            Toast.makeText(getContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
-        else if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(mEndDateApiFormat)) { // Verify beginDate < endDate
-            Toast.makeText(getContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
-            if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(sdfToApi.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApiFormat) > Integer.valueOf(sdfToApi.format(Calendar.getInstance().getTime()))) // Verify (beginDate & endDate) < current date
-                Toast.makeText(getContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
-        } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) // Checks that at least one category is checked
-            Toast.makeText(getContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
-        else
-            new SearchCall().search(this, mQuery.getText().toString(), getSection(), mBeginDateApiFormat, mEndDateApiFormat);
-    }
+    // BOTH PART
+    public String getSection() {
+        // Checkbox is checked or not return string for api
+        String section = "";
 
-    private void initBeginDate() {
-        // Default date is current date
-        Date currentDate = Calendar.getInstance().getTime();
-        mBeginDateApiFormat = sdfToApi.format(currentDate);
-
-        mBeginDateTextView.setText(sdfToDisplay.format(currentDate));
-    }
-
-    public void setBeginDate() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DATE);
-
-        // Display user choice on TextView
-        DatePickerDialog.OnDateSetListener dateSetListenerBegin = new DatePickerDialog.OnDateSetListener() {
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-
-                String beginDate = dateFormatter.getDisplayDateFormat(year, month, day);
-                mBeginDateApiFormat = dateFormatter.getApiDateFormat(year, month, day);
-                mBeginDateTextView.setText(beginDate);
-            }
-        };
-
-        DatePickerDialog dialog = new DatePickerDialog(
-                Objects.requireNonNull(getContext()),
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                dateSetListenerBegin,
-                year, month, day);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-    }
-
-    private void initEndDate() {
-        // Default date is current date
-
-        Date currentDate = Calendar.getInstance().getTime();
-        mEndDateApiFormat = sdfToApi.format(currentDate);
-
-        mEndDateTextView.setText(sdfToDisplay.format(currentDate));
-    }
-
-    public void setEndDate() {
-        Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DATE);
-
-        // Display user choice on TextView
-        DatePickerDialog.OnDateSetListener dateSetListenerEnd = new DatePickerDialog.OnDateSetListener() {
-
-            @Override
-            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
-                String endDate = dateFormatter.getDisplayDateFormat(year, month, day);
-
-                mEndDateApiFormat = dateFormatter.getApiDateFormat(year, month, day);
-                mEndDateTextView.setText(endDate);
-            }
-        };
-
-        DatePickerDialog dialog = new DatePickerDialog(
-                Objects.requireNonNull(getContext()),
-                android.R.style.Theme_Holo_Light_Dialog_MinWidth,
-                dateSetListenerEnd,
-                year, month, day);
-        Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
-    }
-
-    private void initAlarmManager() {
-        alarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
-        Intent notifyIntent = new Intent(getContext(), MyReceiver.class);
-        pendingIntent = PendingIntent.getBroadcast(getContext(), 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-    }
-
-    private void enableAlarm() {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTimeInMillis(System.currentTimeMillis());
-        calendar.set(Calendar.HOUR, 9);
-        calendar.set(Calendar.MINUTE, 30);
-        calendar.set(Calendar.SECOND, 0);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 86400000, pendingIntent); // 1X / Day
-        // Difference between setInexactRepeating & setExactRepeating
-        // setInexactRepeating : The system chooses the appropriate time to display the notification
-        // setExactRepeating : The system displays the notification no matter what happens
-    }
-
-    private void disableAlarm() {
-        alarmManager.cancel(pendingIntent);
-    }
-
-    private void setCategoriesPreferences() {
-        String userCategoriesPreferences = SharedPreferencesManager.getString(getContext(), USER_CATEGORIES);
-//        Log.i("test"," " + string);
-
-        if (userCategoriesPreferences.contains("Arts"))
-            mArts.setChecked(true);
-        else mArts.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Sports"))
-            mSports.setChecked(true);
-        else mSports.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Travels"))
-            mTravels.setChecked(true);
-        else mTravels.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Politics"))
-            mPolitics.setChecked(true);
-        else mPolitics.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Business"))
-            mBusiness.setChecked(true);
-        else mBusiness.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Entrepreneurs"))
-            mEntrepreneurs.setChecked(true);
-        else mEntrepreneurs.setChecked(false);
-    }
-
-    @Override
-    public void onResponse(SearchResponse searchResponse) {
-        Intent intent = new Intent(getContext(), DisplaySearchActivity.class);
-        intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
-        startActivity(intent);
-    }
-
-    @Override
-    public void onFailure() {
-        Log.i("", "");
-        // FIXME: 15/07/2019 change prototype of onFailure for get in parameter exception throw the error
+        if (mArts.isChecked())
+            section += "Arts+";
+        if (mPolitics.isChecked())
+            section += "Politics+";
+        if (mBusiness.isChecked())
+            section += "Business+";
+        if (mSports.isChecked())
+            section += "Sports+";
+        if (mEntrepreneurs.isChecked())
+            section += "Entrepreneurs+";
+        if (mTravels.isChecked())
+            section += "Travels+";
+        return section;
     }
 }
+
+
+/////////////////////////////////////////////  OLD WORK  //////////////////////////////////////////////////////////////////////////////////
+//        mAlarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
+//        Intent notifyIntent = new Intent(getContext(), MyNotificationReceiver.class);
+//        mPendingIntent = PendingIntent.getBroadcast(getContext(), 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+//        Calendar calendar = Calendar.getInstance();
+//        calendar.setTimeInMillis(System.currentTimeMillis());
+//        calendar.set(Calendar.HOUR, 15);
+//        calendar.set(Calendar.MINUTE, 0);
+//        calendar.set(Calendar.SECOND, 0);
+//        mAlarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), /*86400000*/ 1500, mPendingIntent); // 1X / Day
+// Difference between setInexactRepeating & setExactRepeating
+// setInexactRepeating : The system chooses the appropriate time to display the notification
+// setExactRepeating : The system displays the notification no matter what happens
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

@@ -4,6 +4,7 @@
     package="com.mynews">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -15,21 +16,19 @@
 
         <!--Notifications-->
         <receiver
-            android:name=".utils.MyReceiver"
-            android:enabled="true"
-            android:exported="false"></receiver>
-
-        <!--Notifications-->
-        <service
-            android:name=".utils.MyNewIntentService"
-            android:exported="false"></service>
+            android:name=".utils.MyNotificationReceiver"
+            android:enabled="false">
+            <intent-filter>
+                <!--Notification still operate when the device is restart-->
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
 
         <activity
             android:name=".controller.activities.NotificationActivity"
             android:parentActivityName=".controller.activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SearchTheme" />
-
 
         <activity
             android:name=".controller.activities.WebViewActivity"

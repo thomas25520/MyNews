@@ -18,22 +18,22 @@ public class SearchResponse {
     public SearchResponse() {
     }
 
-    public Meta getMeta() {
-        return meta;
-    }
-
-    public void setMeta(Meta meta) {
-        this.meta = meta;
-    }
-
     // Getter
     public List<Docs> getDocs() {
         return docs;
     }
 
+    public Meta getMeta() {
+        return meta;
+    }
+
     // Setter
     public void setDocs(List<Docs> docs) {
         this.docs = docs;
+    }
+
+    public void setMeta(Meta meta) {
+        this.meta = meta;
     }
 
     public String toJson() {
