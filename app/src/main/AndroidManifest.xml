@@ -15,15 +15,15 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <!--Notifications-->
+        <!--Notification still operate when the device is restart-->
+
         <receiver
-            android:name=".utils.MyNotificationReceiver"
+            android:name=".utils.SampleBootReceiver"
             android:enabled="false">
             <intent-filter>
-                <!--Notification still operate when the device is restart-->
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
-
         <activity
             android:name=".controller.activities.NotificationActivity"
             android:parentActivityName=".controller.activities.MainActivity"

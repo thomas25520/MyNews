@@ -34,23 +34,20 @@ public class MyNotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         this.context = context;
-        if (Objects.equals(intent.getAction(), "android.intent.action.BOOT_COMPLETED")) {
-            // Set the alarm here.
-            String q = SharedPreferencesManager.getString(context, USER_QUERY);
-            String fq = SharedPreferencesManager.getString(context, USER_CATEGORIES);
-            new SearchCall().search(new RootSearchCallBack() {
-                @Override
-                public void onResponse(SearchResponse searchResponse) {
+        String q = SharedPreferencesManager.getString(context, USER_QUERY);
+        String fq = SharedPreferencesManager.getString(context, USER_CATEGORIES);
+        new SearchCall().search(new RootSearchCallBack() {
+            @Override
+            public void onResponse(SearchResponse searchResponse) {
 //                    createNotification(getNotificationTitle(searchResponse.getMeta().getNumberOfArticles()));
-                    callNotification(searchResponse.getMeta().getNumberOfArticles());
-                }
+                callNotification(searchResponse.getMeta().getNumberOfArticles());
+            }
 
-                @Override
-                public void onFailure() {
-
-                }
-            }, q, fq, sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
-        }
+            @Override
+            public void onFailure() {
+                // FIXME: 06/08/2019 take parameter eg: exception or String with error msg
+            }
+        }, q, fq, sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
     }
 
     // Check the spelling to display in function of nb article return by the server.
@@ -67,7 +64,27 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         createAndShowNotification(R.drawable.ic_news_logo, title, "", NotificationCompat.PRIORITY_DEFAULT, CHANNEL_ID, NOTIFICATION_ID, context);
     }
 
-    // Step 1 : create the notification.
+    // Supplementary method for creating and display notification with some of parameters.
+    public void createAndShowNotification(int icon, String title, String content, int notificationCompat, String channelId, int notificationId, Context context) {
+        createNotificationChannel(context, channelId);
+        NotificationCompat.Builder notificationBuilder = createNotification(icon, title, content, notificationCompat, channelId, context);
+        showNotification(notificationId, context, notificationBuilder);
+    }
+
+    // Step 1 : Create a channel with importance by default.
+    private void createNotificationChannel(Context context, String channelId) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = "Notification channel name";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+
+            channel.setDescription("Notification channel description");
+            Objects.requireNonNull(notificationManager).createNotificationChannel(channel);
+        }
+    }
+
+    // Step 2 : create the notification.
     public NotificationCompat.Builder createNotification(int icon, String title, String content, int notificationCompat, String channelId, Context context) {
         return new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(icon)
@@ -77,29 +94,9 @@ public class MyNotificationReceiver extends BroadcastReceiver {
                 .setPriority(notificationCompat);
     }
 
-    // Step 2 : Create a channel and set the importance.
-    private void createNotificationChannel(Context context, String channelId) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            CharSequence name = "Notification channel name";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
-            channel.setDescription("Notification channel description");
-
-            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-            Objects.requireNonNull(notificationManager).createNotificationChannel(channel);
-        }
-    }
-
     // Step 3 : Show the notification.
     public void showNotification(int notificationId, Context context, NotificationCompat.Builder notificationBuilder) {
         NotificationManagerCompat.from(context).notify(notificationId, notificationBuilder.build());
-    }
-
-    // Supplementary method for creating and display notification with some of parameters.
-    public void createAndShowNotification(int icon, String title, String content, int notificationCompat, String channelId, int notificationId, Context context) {
-        createNotificationChannel(context, channelId);
-        NotificationCompat.Builder notificationBuilder = createNotification(icon, title, content, notificationCompat, channelId, context);
-        showNotification(notificationId, context, notificationBuilder);
     }
 }
 

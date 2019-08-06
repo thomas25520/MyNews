@@ -33,6 +33,7 @@ import com.mynews.controller.activities.DisplaySearchActivity;
 import com.mynews.data.entities.search.SearchResponse;
 import com.mynews.utils.DateFormatter;
 import com.mynews.utils.MyNotificationReceiver;
+import com.mynews.utils.SampleBootReceiver;
 import com.mynews.utils.SearchCall;
 import com.mynews.utils.SharedPreferencesManager;
 
@@ -246,7 +247,7 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         categoriesPosition();
         setCategoriesPreferences();
         oncePerDayBtnPosition();
-        enableAlarm();
+        //enableAlarm();
     }
 
     private void initViewForNotificationActivity() {
@@ -309,7 +310,7 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         calendar.set(Calendar.SECOND, second);
 
         AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, mPendingIntent);
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), intervalDay, mPendingIntent);
     }
 
     private void enableAlarm() {
@@ -319,7 +320,7 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
 
     // Prevent notification disable if device is reboot
     private void keepNotificationAfterRestart() {
-        ComponentName receiver = new ComponentName(getContext(), MyNotificationReceiver.class);
+        ComponentName receiver = new ComponentName(getContext(), SampleBootReceiver.class);
         PackageManager pm = getContext().getPackageManager();
 
         pm.setComponentEnabledSetting(receiver,
@@ -337,36 +338,41 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
 
         if (userCategoriesPreferences.contains("Arts"))
             mArts.setChecked(true);
-        else mArts.setChecked(false);
+        else
+            mArts.setChecked(false);
 
         if (userCategoriesPreferences.contains("Sports"))
             mSports.setChecked(true);
-        else mSports.setChecked(false);
+        else
+            mSports.setChecked(false);
 
         if (userCategoriesPreferences.contains("Travels"))
             mTravels.setChecked(true);
-        else mTravels.setChecked(false);
+        else
+            mTravels.setChecked(false);
 
         if (userCategoriesPreferences.contains("Politics"))
             mPolitics.setChecked(true);
-        else mPolitics.setChecked(false);
+        else
+            mPolitics.setChecked(false);
 
         if (userCategoriesPreferences.contains("Business"))
             mBusiness.setChecked(true);
-        else mBusiness.setChecked(false);
+        else
+            mBusiness.setChecked(false);
 
         if (userCategoriesPreferences.contains("Entrepreneurs"))
             mEntrepreneurs.setChecked(true);
-        else mEntrepreneurs.setChecked(false);
+        else
+            mEntrepreneurs.setChecked(false);
     }
 
     public void oncePerDayBtnPosition() {
         // Set notification btn position when user open notification menu
-        if (SharedPreferencesManager.getBoolean(getContext(), USER_NOTIFICATION_BTN)) {
-            mNotificationBtn.setChecked(true);
-        } else {
+        if (SharedPreferencesManager.getBoolean(getContext(), USER_NOTIFICATION_BTN))
+            mNotificationBtn.setChecked(true); // FIXME: 06/08/2019 perform only display ...
+        else
             mNotificationBtn.setChecked(false);
-        }
 
         final CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
             @Override
