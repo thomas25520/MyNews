@@ -3,10 +3,8 @@ package com.mynews.controller.fragment;
 import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.PendingIntent;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -33,7 +31,6 @@ import com.mynews.controller.activities.DisplaySearchActivity;
 import com.mynews.data.entities.search.SearchResponse;
 import com.mynews.utils.DateFormatter;
 import com.mynews.utils.MyNotificationReceiver;
-import com.mynews.utils.SampleBootReceiver;
 import com.mynews.utils.SearchCall;
 import com.mynews.utils.SharedPreferencesManager;
 
@@ -52,13 +49,13 @@ import static com.mynews.utils.Constants.USER_QUERY;
 public class SearchAndNotificationFragment extends Fragment implements RootSearchCallBack { // while implement interface, should implement method
     private static final String SEARCH_ACTIVITY = "SearchActivity";
     private static final String NOTIFICATION_ACTIVITY = "NotificationActivity";
-    public EditText mQuery;
-    public TextView mBeginDateTextView;
-    public TextView mEndDateTextView;
-    public TextView mSearchBtn;
-    public Switch mNotificationBtn;
-    SimpleDateFormat sdfToApi = new SimpleDateFormat("yyyyMMdd");
-    SimpleDateFormat sdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
+    SimpleDateFormat mSdfToApi = new SimpleDateFormat("yyyyMMdd");
+    SimpleDateFormat mSdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
+    private EditText mQuery;
+    private TextView mBeginDateTextView;
+    private TextView mEndDateTextView;
+    private TextView mSearchBtn;
+    private Switch mNotificationBtn;
     private String mBeginDateApiFormat;
     private String mEndDateApiFormat;
     private CheckBox mArts;
@@ -146,12 +143,12 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
     private void initBeginDate() {
         // Default date is current date
         Date currentDate = Calendar.getInstance().getTime();
-        mBeginDateApiFormat = sdfToApi.format(currentDate);
+        mBeginDateApiFormat = mSdfToApi.format(currentDate);
 
-        mBeginDateTextView.setText(sdfToDisplay.format(currentDate));
+        mBeginDateTextView.setText(mSdfToDisplay.format(currentDate));
     }
 
-    public void setBeginDate() {
+    private void setBeginDate() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -179,14 +176,13 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
 
     private void initEndDate() {
         // Default date is current date
-
         Date currentDate = Calendar.getInstance().getTime();
-        mEndDateApiFormat = sdfToApi.format(currentDate);
+        mEndDateApiFormat = mSdfToApi.format(currentDate);
 
-        mEndDateTextView.setText(sdfToDisplay.format(currentDate));
+        mEndDateTextView.setText(mSdfToDisplay.format(currentDate));
     }
 
-    public void setEndDate() {
+    private void setEndDate() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
         int month = calendar.get(Calendar.MONTH);
@@ -214,13 +210,13 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
     }
 
     // User press SEARCH button
-    public void actionSearch() {
+    private void actionSearch() {
         // User Error handling
         if (mQuery.getText().toString().isEmpty()) // Check query
             Toast.makeText(getContext(), "Merci d'entrer un mot-clé", Toast.LENGTH_LONG).show();
         else if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(mEndDateApiFormat)) { // Verify beginDate < endDate
             Toast.makeText(getContext(), "Merci d'entrer une date de début inférieur à la date de fin.", Toast.LENGTH_LONG).show();
-            if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(sdfToApi.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApiFormat) > Integer.valueOf(sdfToApi.format(Calendar.getInstance().getTime()))) // Verify (beginDate & endDate) < current date
+            if (Integer.valueOf(mBeginDateApiFormat) > Integer.valueOf(mSdfToApi.format(Calendar.getInstance().getTime())) || Integer.valueOf(mEndDateApiFormat) > Integer.valueOf(mSdfToApi.format(Calendar.getInstance().getTime()))) // Verify (beginDate & endDate) < current date
                 Toast.makeText(getContext(), "Merci d'entrer une date inférieure à la date actuelle", Toast.LENGTH_LONG).show();
         } else if (!mArts.isChecked() && !mPolitics.isChecked() && !mBusiness.isChecked() && !mSports.isChecked() && !mEntrepreneurs.isChecked() && !mTravels.isChecked()) // Checks that at least one category is checked
             Toast.makeText(getContext(), "Merci de cocher au moins une catégorie.", Toast.LENGTH_LONG).show();
@@ -247,7 +243,6 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         categoriesPosition();
         setCategoriesPreferences();
         oncePerDayBtnPosition();
-        //enableAlarm();
     }
 
     private void initViewForNotificationActivity() {
@@ -262,7 +257,7 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         mTravels = mView.findViewById(R.id.fragment_notification_checkBox_travels);
     }
 
-    public void queryUserPreferences() {
+    private void queryUserPreferences() {
         if (!SharedPreferencesManager.getString(getContext(), USER_QUERY).isEmpty())
             mQuery.setText(SharedPreferencesManager.getString(getContext(), USER_QUERY));
 
@@ -283,7 +278,7 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         });
     }
 
-    public void categoriesPosition() {
+    private void categoriesPosition() {
         CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -298,6 +293,10 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         mTravels.setOnCheckedChangeListener(listener);
     }
 
+    private void enableAlarm() {
+        scheduleNotification(9, 30, 0, AlarmManager.INTERVAL_DAY);
+    }
+
     // Change time to display the notification
     private void scheduleNotification(int hour, int minute, int second, long intervalDay) {
         Intent notifyIntent = new Intent(getContext(), MyNotificationReceiver.class);
@@ -309,70 +308,29 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         calendar.set(Calendar.MINUTE, minute);
         calendar.set(Calendar.SECOND, second);
 
-        AlarmManager alarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), intervalDay, mPendingIntent);
-    }
-
-    private void enableAlarm() {
-        scheduleNotification(9, 30, 0, AlarmManager.INTERVAL_DAY);
-        keepNotificationAfterRestart();
-    }
-
-    // Prevent notification disable if device is reboot
-    private void keepNotificationAfterRestart() {
-        ComponentName receiver = new ComponentName(getContext(), SampleBootReceiver.class);
-        PackageManager pm = getContext().getPackageManager();
-
-        pm.setComponentEnabledSetting(receiver,
-                PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-                PackageManager.DONT_KILL_APP);
+        mAlarmManager = (AlarmManager) getContext().getSystemService(Context.ALARM_SERVICE);
+        mAlarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), intervalDay, mPendingIntent);
     }
 
     private void disableAlarm() {
-//        mAlarmManager.cancel(mPendingIntent);
+        if (mAlarmManager != null)
+            mAlarmManager.cancel(mPendingIntent);
     }
 
     private void setCategoriesPreferences() {
         String userCategoriesPreferences = SharedPreferencesManager.getString(getContext(), USER_CATEGORIES);
-//        Log.i("test"," " + string);
 
-        if (userCategoriesPreferences.contains("Arts"))
-            mArts.setChecked(true);
-        else
-            mArts.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Sports"))
-            mSports.setChecked(true);
-        else
-            mSports.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Travels"))
-            mTravels.setChecked(true);
-        else
-            mTravels.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Politics"))
-            mPolitics.setChecked(true);
-        else
-            mPolitics.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Business"))
-            mBusiness.setChecked(true);
-        else
-            mBusiness.setChecked(false);
-
-        if (userCategoriesPreferences.contains("Entrepreneurs"))
-            mEntrepreneurs.setChecked(true);
-        else
-            mEntrepreneurs.setChecked(false);
+        mArts.setChecked(userCategoriesPreferences.contains("Arts"));
+        mSports.setChecked(userCategoriesPreferences.contains("Sports"));
+        mTravels.setChecked(userCategoriesPreferences.contains("Travels"));
+        mPolitics.setChecked(userCategoriesPreferences.contains("Politics"));
+        mBusiness.setChecked(userCategoriesPreferences.contains("Business"));
+        mEntrepreneurs.setChecked(userCategoriesPreferences.contains("Entrepreneurs"));
     }
 
-    public void oncePerDayBtnPosition() {
+    private void oncePerDayBtnPosition() {
         // Set notification btn position when user open notification menu
-        if (SharedPreferencesManager.getBoolean(getContext(), USER_NOTIFICATION_BTN))
-            mNotificationBtn.setChecked(true); // FIXME: 06/08/2019 perform only display ...
-        else
-            mNotificationBtn.setChecked(false);
+        mNotificationBtn.setChecked(SharedPreferencesManager.getBoolean(getContext(), USER_NOTIFICATION_BTN));
 
         final CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -405,7 +363,7 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
     }
 
     // BOTH PART
-    public String getSection() {
+    private String getSection() {
         // Checkbox is checked or not return string for api
         String section = "";
 
@@ -424,20 +382,3 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         return section;
     }
 }
-
-
-/////////////////////////////////////////////  OLD WORK  //////////////////////////////////////////////////////////////////////////////////
-//        mAlarmManager = (AlarmManager) Objects.requireNonNull(getContext()).getSystemService(Context.ALARM_SERVICE);
-//        Intent notifyIntent = new Intent(getContext(), MyNotificationReceiver.class);
-//        mPendingIntent = PendingIntent.getBroadcast(getContext(), 2, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTimeInMillis(System.currentTimeMillis());
-//        calendar.set(Calendar.HOUR, 15);
-//        calendar.set(Calendar.MINUTE, 0);
-//        calendar.set(Calendar.SECOND, 0);
-//        mAlarmManager.setInexactRepeating(AlarmManager.RTC, calendar.getTimeInMillis(), /*86400000*/ 1500, mPendingIntent); // 1X / Day
-// Difference between setInexactRepeating & setExactRepeating
-// setInexactRepeating : The system chooses the appropriate time to display the notification
-// setExactRepeating : The system displays the notification no matter what happens
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

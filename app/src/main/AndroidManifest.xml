@@ -15,21 +15,16 @@
         tools:ignore="GoogleAppIndexingWarning">
 
         <!--Notifications-->
-        <!--Notification still operate when the device is restart-->
-
         <receiver
-            android:name=".utils.SampleBootReceiver"
+            android:name=".utils.MyNotificationReceiver"
             android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
         </receiver>
+
         <activity
             android:name=".controller.activities.NotificationActivity"
             android:parentActivityName=".controller.activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SearchTheme" />
-
         <activity
             android:name=".controller.activities.WebViewActivity"
             android:launchMode="singleTop"
@@ -45,7 +40,6 @@
             android:theme="@style/MainActivityTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -56,5 +50,4 @@
             android:name=".controller.activities.DisplaySearchActivity"
             android:theme="@style/SearchTheme" />
     </application>
-
 </manifest>

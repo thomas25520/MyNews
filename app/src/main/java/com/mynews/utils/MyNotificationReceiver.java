@@ -28,43 +28,47 @@ public class MyNotificationReceiver extends BroadcastReceiver {
     private static final String CHANNEL_ID = "chanel_1";
     private static final int NOTIFICATION_ID = 1;
 
-    Context context;
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+    Context mContext;
+    SimpleDateFormat mSdf = new SimpleDateFormat("yyyyMMdd");
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        this.context = context;
+        mContext = context;
+        // Set the alarm here.
         String q = SharedPreferencesManager.getString(context, USER_QUERY);
         String fq = SharedPreferencesManager.getString(context, USER_CATEGORIES);
         new SearchCall().search(new RootSearchCallBack() {
             @Override
             public void onResponse(SearchResponse searchResponse) {
-//                    createNotification(getNotificationTitle(searchResponse.getMeta().getNumberOfArticles()));
                 callNotification(searchResponse.getMeta().getNumberOfArticles());
             }
 
             @Override
             public void onFailure() {
-                // FIXME: 06/08/2019 take parameter eg: exception or String with error msg
             }
-        }, q, fq, sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+        }, q, fq, mSdf.format(Calendar.getInstance().getTime()), mSdf.format(Calendar.getInstance().getTime()));
     }
 
     // Check the spelling to display in function of nb article return by the server.
     private void callNotification(int nbArticle) {
-        String title;
-        switch (nbArticle) {
-            case 0:
-                title = "aucun article";
-                break;
-            default:
-                title = nbArticle + ((nbArticle == 1) ? " nouveau article disponible" : " nouveaux articles disponibles");
-                break;
-        }
-        createAndShowNotification(R.drawable.ic_news_logo, title, "", NotificationCompat.PRIORITY_DEFAULT, CHANNEL_ID, NOTIFICATION_ID, context);
+// Test ternaire
+//        String tmp1, tmp2 = "";
+//        if (nbArticle == 0) {
+//            tmp1 = "aucun article";
+//        } else {
+//            tmp1 = "" + nbArticle;
+//            if (nbArticle == 1) {
+//                tmp2 = " nouveau article disponible";
+//            } else {
+//                tmp2 = " nouveaux articles disponibles";
+//            }
+//        }
+//        String tmp = tmp1 + tmp2;
+
+        String title = nbArticle == 0 ? "aucun article" : nbArticle + ((nbArticle == 1) ? " nouveau article disponible" : " nouveaux articles disponibles");
+        createAndShowNotification(R.drawable.ic_news_logo, title, "", NotificationCompat.PRIORITY_DEFAULT, CHANNEL_ID, NOTIFICATION_ID, mContext);
     }
 
-    // Supplementary method for creating and display notification with some of parameters.
     public void createAndShowNotification(int icon, String title, String content, int notificationCompat, String channelId, int notificationId, Context context) {
         createNotificationChannel(context, channelId);
         NotificationCompat.Builder notificationBuilder = createNotification(icon, title, content, notificationCompat, channelId, context);
@@ -99,41 +103,3 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         NotificationManagerCompat.from(context).notify(notificationId, notificationBuilder.build());
     }
 }
-
-///////////////////////////// OLD WORK ///////////////////////////////////////////////////////////////////////////////////
-//    private void createNotification(String title) {
-//        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-//                .setSmallIcon(R.drawable.ic_news_logo)
-//                .setContentTitle(title) // Set notification title
-//                .setAutoCancel(true)
-//                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-//
-//        CharSequence name = "chanel_1";
-//        String description = "Number of articles available";
-//        int importance = NotificationManager.IMPORTANCE_DEFAULT;
-//        NotificationChannel channel;
-//
-//        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-//            channel = new NotificationChannel(CHANNEL_ID, name, importance);
-//            channel.setDescription(description);
-//
-//            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
-//            notificationManager.createNotificationChannel(channel);
-//        }
-//        // Display notification
-//        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
-//        notificationManager.notify(NOTIFICATION_ID, builder.build()); // Id is unique for each notification
-//    }
-//
-//    public String getNotificationTitle(int nbArticles) {
-//        String title;
-//        if (nbArticles == 0)
-//            title = "Aucun article disponible";
-//        else if (nbArticles == 1)
-//            title = "1 nouvel article disponible";
-//        else title = nbArticles + " nouveaux articles disponibles";
-//
-//        return title;
-//    }
-//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
