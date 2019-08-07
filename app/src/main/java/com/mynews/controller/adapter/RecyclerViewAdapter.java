@@ -116,7 +116,7 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
                     if (isMultimediaRequired) {
                         if (docs.hasImage())
-                            Picasso.get().load(docs.getMultimedia().get(0).getUrl()).into(holder.picture);
+                            Picasso.get().load(docs.getMultimediaSearch().get(0).getUrl()).into(holder.picture);
                     }
                     holder.title.setText(docs.getTitle());
                     holder.date.setText(sdf.format(docs.getDate()));

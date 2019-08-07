@@ -19,7 +19,7 @@ import retrofit2.Response;
 public class CategoriesCall {
 
     // Top stories reference
-    public void topStoriesHome(final RootCallback callbacksTabCategoriesFragment) {
+    public void getTopStoriesHome(final RootCallback callbacksTabCategoriesFragment) {
         Call<Root> call = RetrofitManager.getInstance().getTopStoriesFrom(Section.home.toString(), RetrofitManager.getApiKey());
         call.enqueue(new Callback<Root>() {
             @Override
@@ -36,7 +36,7 @@ public class CategoriesCall {
     }
 
     // Automobile reference
-    public void topStoryFrom(final RootCallback callbacksTabCategoriesFragment) {
+    public void getTopStoryAutomobile(final RootCallback callbacksTabCategoriesFragment) {
         Call<Root> call = RetrofitManager.getInstance().getTopStoriesFrom(Section.automobiles.toString(), RetrofitManager.getApiKey());
         call.enqueue(new Callback<Root>() {
             @Override
@@ -53,7 +53,7 @@ public class CategoriesCall {
     }
 
     // MostPopular reference
-    public void mostPopular(final RootCallback callbacksTabCategoriesFragment) {
+    public void getMostPopular(final RootCallback callbacksTabCategoriesFragment) {
         Call<Root> call = RetrofitManager.getInstance().getMostPopularFrom(ArticleTypes.views.toString(), PeriodType.seven.toInt(), RetrofitManager.getApiKey());
         call.enqueue(new Callback<Root>() {
             @Override

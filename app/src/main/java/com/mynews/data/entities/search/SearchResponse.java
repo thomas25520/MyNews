@@ -12,6 +12,9 @@ public class SearchResponse {
     @SerializedName("docs")
     private List<Docs> docs;
 
+    @SerializedName("meta")
+    private Meta meta;
+
     public SearchResponse() {
     }
 
@@ -20,9 +23,17 @@ public class SearchResponse {
         return docs;
     }
 
+    public Meta getMeta() {
+        return meta;
+    }
+
     // Setter
     public void setDocs(List<Docs> docs) {
         this.docs = docs;
+    }
+
+    public void setMeta(Meta meta) {
+        this.meta = meta;
     }
 
     public String toJson() {

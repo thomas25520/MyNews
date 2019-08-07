@@ -42,8 +42,8 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
         CategoriesCall categoriesCall = new CategoriesCall();
 
         switch (categories) {
-            case 1:
-                categoriesCall.topStoriesHome(new RootCallback() {
+            case 1: // TopStories
+                categoriesCall.getTopStoriesHome(new RootCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setResultList(result);
@@ -53,11 +53,11 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
                     public void onFailure() {
                     }
                 });
-                categoriesCall.topStoriesHome(this);
+                categoriesCall.getTopStoriesHome(this);
                 break;
-            case 2:
+            case 2: // MostPopular
                 recyclerAdapter.setMultimediaRequired(false);
-                categoriesCall.mostPopular(new RootCallback() {
+                categoriesCall.getMostPopular(new RootCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setResultList(result);
@@ -68,8 +68,8 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
                     }
                 });
                 break;
-            case 3:
-                categoriesCall.topStoryFrom(new RootCallback() {
+            case 3: // Automobile
+                categoriesCall.getTopStoryAutomobile(new RootCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setResultList(result);
@@ -80,7 +80,7 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
 
                     }
                 });
-                categoriesCall.topStoryFrom(this);
+                categoriesCall.getTopStoryAutomobile(this);
                 break;
             default:
                 break;

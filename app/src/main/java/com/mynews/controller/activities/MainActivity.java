@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RootSearchCallBack {
-
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -39,6 +39,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureDrawerLayout();
         setToolbar();
         setViewPagerAndTabs();
+        // displayNotificationOfTheDay(); // Only for test
+    }
+
+    @Override
+    public void onResponse(SearchResponse searchResponse) {
+//        Log.i("LOG","test avec this OK");
+        Intent intent = new Intent(this, DisplaySearchActivity.class);
+        intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
+        startActivity(intent);
+    }
+
+    @Override
+    public void onFailure() {
+//        Log.i("LOG","test avec this FAIL");
+    }
+
+    private String getCurrentDateFormatToApi() {
+        return sdf.format(Calendar.getInstance().getTime());
     }
 
     // Configure NavigationDrawer
@@ -94,10 +112,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.activity_main_toolbar_search_btn:
                 startActivity(new Intent(MainActivity.this, SearchActivity.class));
                 return true;
+            case R.id.activity_main_toolbar_notification_btn:
+                startActivity(new Intent(MainActivity.this, NotificationActivity.class));
+                return true;
             case R.id.activity_main_toolbar_about_btn:
                 configureAboutMenu();
+                return true;
             case R.id.activity_main_toolbar_help_btn:
                 configureHelpMenu();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -129,12 +152,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 });
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
-
     }
 
     // select item on Navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        // FIXME: 16/07/2019 A revoir pas besoin de faire une recherche passer par getTopStories
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         // Handle Navigation Item Click
         int id = item.getItemId();
@@ -162,17 +185,5 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         this.mDrawerLayout.closeDrawer(GravityCompat.START);
         return true;
-    }
-
-    @Override
-    public void onResponse(SearchResponse searchResponse) {
-        Intent intent = new Intent(this, DisplaySearchActivity.class);
-        intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
-        startActivity(intent);
-    }
-
-    @Override
-    public void onFailure() {
-        // todo : throw the error
     }
 }

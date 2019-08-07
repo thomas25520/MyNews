@@ -4,12 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import com.mynews.controller.model.Search;
-
 /**
- * Created by Dutru Thomas on 20/03/2019.
+ * Created by Dutru Thomas on 18/07/2019.
  */
-
 public class SharedPreferencesManager {
     private static SharedPreferences mPreferences;
 
@@ -19,23 +16,21 @@ public class SharedPreferencesManager {
         mPreferences.edit().putString(key, value).apply();
     }
 
-    // Get string
+    // Get string in sharedPreferences
     public static String getString(Context context, String key) {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return mPreferences.getString(key, "");
     }
 
-    // Save search object in sharedPreferences
-    public static void putSearch(Context context, String key, Search search) {
+    // Save boolean in sharedPreferences
+    public static void putBoolean(Context context, String key, Boolean value) {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        String json = search.formatToJson();
-        mPreferences.edit().putString(key, json).apply();
+        mPreferences.edit().putBoolean(key, value).apply();
     }
 
-    // Get Search object
-    public static Search getSearch(Context context) {
+    // Get boolean in sharedPreferences
+    public static Boolean getBoolean(Context context, String key) {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        Search search = new Search();
-        return search.jsonToSearch(mPreferences.getString(Constants.SEARCH_OBJECT, ""));
+        return mPreferences.getBoolean(key, false);
     }
 }
