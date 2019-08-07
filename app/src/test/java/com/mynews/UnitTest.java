@@ -1,7 +1,7 @@
 package com.mynews;
 
 import com.mynews.utils.DateFormatter;
-import com.mynews.utils.MyReceiver;
+import com.mynews.utils.MyNotificationReceiver;
 
 import org.junit.Test;
 
@@ -24,9 +24,10 @@ public class UnitTest {
         assertEquals(expected, actual);
     }
 
+    // todo test to be repair
     @Test
     public void getNotificationTitle() {
-        MyReceiver receiver = new MyReceiver();
+        MyNotificationReceiver receiver = new MyNotificationReceiver();
         String actual = receiver.getNotificationTitle(0);
         String expected = "Aucun article disponible";
         assertEquals(expected, actual);

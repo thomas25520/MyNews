@@ -2,7 +2,6 @@ package com.mynews.data.entities.search;
 
 import com.google.gson.Gson;
 import com.google.gson.annotations.SerializedName;
-import com.mynews.data.entities.top_stories_most_popular_other.Multimedia;
 
 import java.util.Date;
 import java.util.List;
@@ -27,55 +26,50 @@ public class Docs {
     private String subCategory;
 
     @SerializedName("multimedia")
-    private List<Multimedia> multimedia;
+    private List<MultimediaSearch> multimedia;
 
     // Getter
     public String getUrl() {
         return url;
     }
-
     public String getTitle() {
         return title;
     }
-
     public Date getDate() {
         return date;
     }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
     public String getCategory() {
         return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    // Setter
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
     }
 
     public String getSubCategory() {
         return subCategory;
     }
 
+    public List<MultimediaSearch> getMultimediaSearch() {
+        return multimedia;
+    }
+
+    // Setter
+    public void setUrl(String url) {
+        this.url = url;
+    }
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
     public void setSubCategory(String subCategory) {
         this.subCategory = subCategory;
     }
 
-    public List<Multimedia> getMultimedia() {
-        return multimedia;
-    }
-
-    public void setMultimedia(List<Multimedia> multimedia) {
+    public void setMultimedia(List<MultimediaSearch> multimedia) {
         this.multimedia = multimedia;
     }
 
