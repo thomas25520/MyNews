@@ -20,7 +20,7 @@ import static com.mynews.R.layout.activity_search_result;
  * Created by Dutru Thomas on 20/06/2019.
  */
 public class DisplaySearchActivity extends AppCompatActivity {
-    RecyclerViewAdapter recyclerAdapter;
+    public RecyclerViewAdapter recyclerAdapter;
     SearchResponse mSearchResponse = new SearchResponse();
 
     @Override

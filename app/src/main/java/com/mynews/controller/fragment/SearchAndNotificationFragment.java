@@ -342,7 +342,7 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
         calendar.set(Calendar.HOUR, 9);
         calendar.set(Calendar.MINUTE, 30);
         calendar.set(Calendar.SECOND, 0);
-        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 86400000, pendingIntent); // 1X / Day
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent); // 1X / Day
         // Difference between setInexactRepeating & setExactRepeating
         // setInexactRepeating : The system chooses the appropriate time to display the notification
         // setExactRepeating : The system displays the notification no matter what happens
