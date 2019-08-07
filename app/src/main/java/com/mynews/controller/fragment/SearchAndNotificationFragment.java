@@ -215,12 +215,6 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
     }
 
     public void oncePerDayBtnPosition() {
-        if (SharedPreferencesManager.getBoolean(getContext(), USER_NOTIFICATION_BTN)) {
-            mNotificationBtn.setChecked(true);
-        } else {
-            mNotificationBtn.setChecked(false);
-        }
-
         final CompoundButton.OnCheckedChangeListener listener = new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

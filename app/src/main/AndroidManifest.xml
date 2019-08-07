@@ -17,19 +17,14 @@
         <receiver
             android:name=".utils.MyReceiver"
             android:enabled="true"
-            android:exported="false"></receiver>
+            android:exported="false" />
 
         <!--Notifications-->
-        <service
-            android:name=".utils.MyNewIntentService"
-            android:exported="false"></service>
-
         <activity
             android:name=".controller.activities.NotificationActivity"
             android:parentActivityName=".controller.activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/SearchTheme" />
-
 
         <activity
             android:name=".controller.activities.WebViewActivity"
@@ -57,5 +52,4 @@
             android:name=".controller.activities.DisplaySearchActivity"
             android:theme="@style/SearchTheme" />
     </application>
-
 </manifest>
