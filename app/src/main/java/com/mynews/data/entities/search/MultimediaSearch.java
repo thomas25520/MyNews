@@ -9,13 +9,15 @@ public class MultimediaSearch {
     @SerializedName("url")
     private String url;
 
+    private String missedExtentionUrl = "https://static01.nyt.com/";
+
     // Getter
     public String getUrl() {
-        return url;
+        return missedExtentionUrl + url;
     }
 
     // Setter
     public void setUrl(String url) {
-        this.url = url;
+        this.url = missedExtentionUrl + url;
     }
 }
