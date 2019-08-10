@@ -40,7 +40,9 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         new SearchCall().search(new SearchResponseCallBack() {
             @Override
             public void onResponse(SearchResponse searchResponse) {
-                callNotification(searchResponse.getMeta().getNumberOfArticles());
+                String title = getNotificationTitle(searchResponse.getMeta().getNumberOfArticles());
+
+                createAndShowNotification(R.drawable.ic_news_logo, title, "", NotificationCompat.PRIORITY_DEFAULT, CHANNEL_ID, NOTIFICATION_ID, mContext);
             }
 
             @Override
@@ -51,23 +53,8 @@ public class MyNotificationReceiver extends BroadcastReceiver {
     }
 
     // Check the spelling to display in function of nb article return by the server.
-    private void callNotification(int nbArticle) {
-// Test ternaire
-//        String tmp1, tmp2 = "";
-//        if (nbArticle == 0) {
-//            tmp1 = "aucun article";
-//        } else {
-//            tmp1 = "" + nbArticle;
-//            if (nbArticle == 1) {
-//                tmp2 = " nouveau article disponible";
-//            } else {
-//                tmp2 = " nouveaux articles disponibles";
-//            }
-//        }
-//        String tmp = tmp1 + tmp2;
-
-        String title = nbArticle == 0 ? "aucun article" : nbArticle + ((nbArticle == 1) ? " nouveau article disponible" : " nouveaux articles disponibles");
-        createAndShowNotification(R.drawable.ic_news_logo, title, "", NotificationCompat.PRIORITY_DEFAULT, CHANNEL_ID, NOTIFICATION_ID, mContext);
+    public String getNotificationTitle(int nbArticle) {
+        return nbArticle == 0 ? "Aucun article disponible" : nbArticle + ((nbArticle == 1) ? " nouvel article disponible" : " nouveaux articles disponibles");
     }
 
     public void createAndShowNotification(int icon, String title, String content, int notificationCompat, String channelId, int notificationId, Context context) {

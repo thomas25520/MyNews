@@ -24,7 +24,6 @@ public class UnitTest {
         assertEquals(expected, actual);
     }
 
-    // todo test to be repair
     @Test
     public void getNotificationTitle() {
         MyNotificationReceiver receiver = new MyNotificationReceiver();
