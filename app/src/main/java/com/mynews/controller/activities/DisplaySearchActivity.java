@@ -1,8 +1,10 @@
 package com.mynews.controller.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,6 +41,21 @@ public class DisplaySearchActivity extends AppCompatActivity {
             mSearchResponse = mSearchResponse.toObject(extras.getString("searchResponse")); // re-create object from json
 
         recyclerAdapter.setDocsList(mSearchResponse.getDocs());
+
+        if (mSearchResponse.getMeta().getNumberOfArticles() == 0) {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this, R.style.AlertDialog);
+            alertDialogBuilder.setTitle("Erreur")
+                    .setMessage("Aucun article correspondant à votre recherche n'a été trouvé, veuillez renouveler votre recherche.")
+                    .setCancelable(true)
+                    .setPositiveButton("Retour recherche", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            finish();
+                        }
+                    });
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            alertDialog.show();
+        }
     }
 
     private void initRecycler() {
