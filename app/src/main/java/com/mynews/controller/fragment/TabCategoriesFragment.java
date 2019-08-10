@@ -6,12 +6,13 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mynews.R;
-import com.mynews.callbacks_interfaces.RootCallback;
+import com.mynews.callbacks_interfaces.ResponseCallback;
 import com.mynews.controller.activities.WebViewActivity;
 import com.mynews.controller.adapter.RecyclerViewAdapter;
 import com.mynews.data.entities.top_stories_most_popular_other.Result;
@@ -21,7 +22,7 @@ import com.mynews.utils.RecyclerViewHolderListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TabCategoriesFragment extends Fragment implements RootCallback {
+public class TabCategoriesFragment extends Fragment {
 
     int categories = 1;
     RecyclerViewAdapter recyclerAdapter;
@@ -43,44 +44,44 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
 
         switch (categories) {
             case 1: // TopStories
-                categoriesCall.getTopStoriesHome(new RootCallback() {
+                categoriesCall.getTopStoriesHome(new ResponseCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setResultList(result);
                     }
 
                     @Override
-                    public void onFailure() {
+                    public void onFailure(Throwable throwable) {
+                        Log.i("TabCategoriesFragment", throwable.toString());
                     }
                 });
-                categoriesCall.getTopStoriesHome(this);
                 break;
             case 2: // MostPopular
                 recyclerAdapter.setMultimediaRequired(false);
-                categoriesCall.getMostPopular(new RootCallback() {
+                categoriesCall.getMostPopular(new ResponseCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setResultList(result);
                     }
 
                     @Override
-                    public void onFailure() {
+                    public void onFailure(Throwable throwable) {
+                        Log.i("TabCategoriesFragment", throwable.toString());
                     }
                 });
                 break;
             case 3: // Automobile
-                categoriesCall.getTopStoryAutomobile(new RootCallback() {
+                categoriesCall.getTopStoryAutomobile(new ResponseCallback() {
                     @Override
                     public void onResponse(List<Result> result) {
                         recyclerAdapter.setResultList(result);
                     }
 
                     @Override
-                    public void onFailure() {
-
+                    public void onFailure(Throwable throwable) {
+                        Log.i("TabCategoriesFragment", throwable.toString());
                     }
                 });
-                categoriesCall.getTopStoryAutomobile(this);
                 break;
             default:
                 break;
@@ -103,13 +104,5 @@ public class TabCategoriesFragment extends Fragment implements RootCallback {
         RecyclerView rv = view.findViewById(R.id.activity_search_recycler_view);
         rv.setLayoutManager(new LinearLayoutManager(getContext()));
         rv.setAdapter(recyclerAdapter);
-    }
-
-    @Override
-    public void onResponse(List<Result> result) {
-    }
-
-    @Override
-    public void onFailure() {
     }
 }

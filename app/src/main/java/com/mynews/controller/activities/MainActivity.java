@@ -12,11 +12,12 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mynews.R;
-import com.mynews.callbacks_interfaces.RootSearchCallBack;
+import com.mynews.callbacks_interfaces.SearchResponseCallBack;
 import com.mynews.controller.adapter.ViewPagerAdapter;
 import com.mynews.controller.fragment.TabCategoriesFragment;
 import com.mynews.data.entities.search.SearchResponse;
@@ -26,7 +27,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Objects;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, RootSearchCallBack {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchResponseCallBack {
     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
     private DrawerLayout mDrawerLayout;
 
@@ -44,15 +45,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onResponse(SearchResponse searchResponse) {
-//        Log.i("LOG","test avec this OK");
         Intent intent = new Intent(this, DisplaySearchActivity.class);
         intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
         startActivity(intent);
     }
 
     @Override
-    public void onFailure() {
-//        Log.i("LOG","test avec this FAIL");
+    public void onFailure(Throwable throwable) {
+        Log.i("MainActivity", throwable.toString());
     }
 
     private String getCurrentDateFormatToApi() {
@@ -157,7 +157,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // select item on Navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // FIXME: 16/07/2019 A revoir pas besoin de faire une recherche passer par getTopStories
+        // FIXME: 16/07/2019 to improve
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         // Handle Navigation Item Click
         int id = item.getItemId();

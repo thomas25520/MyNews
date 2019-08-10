@@ -8,9 +8,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.util.Log;
 
 import com.mynews.R;
-import com.mynews.callbacks_interfaces.RootSearchCallBack;
+import com.mynews.callbacks_interfaces.SearchResponseCallBack;
 import com.mynews.data.entities.search.SearchResponse;
 
 import java.text.SimpleDateFormat;
@@ -37,14 +38,15 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         // Set the alarm here.
         String q = SharedPreferencesManager.getString(context, USER_QUERY);
         String fq = SharedPreferencesManager.getString(context, USER_CATEGORIES);
-        new SearchCall().search(new RootSearchCallBack() {
+        new SearchCall().search(new SearchResponseCallBack() {
             @Override
             public void onResponse(SearchResponse searchResponse) {
                 callNotification(searchResponse.getMeta().getNumberOfArticles());
             }
 
             @Override
-            public void onFailure() {
+            public void onFailure(Throwable throwable) {
+                Log.i("MyNotificationReceiver", throwable.toString());
             }
         }, q, fq, mSdf.format(Calendar.getInstance().getTime()), mSdf.format(Calendar.getInstance().getTime()));
     }

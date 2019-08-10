@@ -26,7 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mynews.R;
-import com.mynews.callbacks_interfaces.RootSearchCallBack;
+import com.mynews.callbacks_interfaces.SearchResponseCallBack;
 import com.mynews.controller.activities.DisplaySearchActivity;
 import com.mynews.data.entities.search.SearchResponse;
 import com.mynews.utils.DateFormatter;
@@ -46,7 +46,7 @@ import static com.mynews.utils.Constants.USER_QUERY;
 /**
  * Created by Dutru Thomas on 06/05/2019.
  */
-public class SearchAndNotificationFragment extends Fragment implements RootSearchCallBack { // while implement interface, should implement method
+public class SearchAndNotificationFragment extends Fragment implements SearchResponseCallBack { // while implement interface, should implement method
     private static final String SEARCH_ACTIVITY = "SearchActivity";
     private static final String NOTIFICATION_ACTIVITY = "NotificationActivity";
     SimpleDateFormat mSdfToApi = new SimpleDateFormat("yyyyMMdd");
@@ -232,9 +232,8 @@ public class SearchAndNotificationFragment extends Fragment implements RootSearc
     }
 
     @Override
-    public void onFailure() {
-        Log.i("", "");
-        // FIXME: 15/07/2019 change prototype of onFailure for get in parameter exception throw the error
+    public void onFailure(Throwable throwable) {
+        Log.i("MainActivity", throwable.toString());
     }
 
     // NOTIFICATION PART
