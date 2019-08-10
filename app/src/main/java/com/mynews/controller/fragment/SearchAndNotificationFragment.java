@@ -49,8 +49,8 @@ import static com.mynews.utils.Constants.USER_QUERY;
 public class SearchAndNotificationFragment extends Fragment implements SearchResponseCallBack { // while implement interface, should implement method
     private static final String SEARCH_ACTIVITY = "SearchActivity";
     private static final String NOTIFICATION_ACTIVITY = "NotificationActivity";
-    SimpleDateFormat mSdfToApi = new SimpleDateFormat("yyyyMMdd");
-    SimpleDateFormat mSdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
+    private SimpleDateFormat mSdfToApi = new SimpleDateFormat("yyyyMMdd");
+    private SimpleDateFormat mSdfToDisplay = new SimpleDateFormat("dd/MM/yyyy");
     private EditText mQuery;
     private TextView mBeginDateTextView;
     private TextView mEndDateTextView;
@@ -95,7 +95,6 @@ public class SearchAndNotificationFragment extends Fragment implements SearchRes
         return mView;
     }
 
-    // SEARCH PART
     private void initSearchActivity() {
         initViewForSearchActivity();
         initBeginDate();
@@ -124,14 +123,12 @@ public class SearchAndNotificationFragment extends Fragment implements SearchRes
                 setBeginDate();
             }
         });
-
         mEndDateTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 setEndDate();
             }
         });
-
         mSearchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -143,8 +140,8 @@ public class SearchAndNotificationFragment extends Fragment implements SearchRes
     private void initBeginDate() {
         // Default date is current date
         Date currentDate = Calendar.getInstance().getTime();
-        mBeginDateApiFormat = mSdfToApi.format(currentDate);
 
+        mBeginDateApiFormat = mSdfToApi.format(currentDate);
         mBeginDateTextView.setText(mSdfToDisplay.format(currentDate));
     }
 
@@ -177,8 +174,8 @@ public class SearchAndNotificationFragment extends Fragment implements SearchRes
     private void initEndDate() {
         // Default date is current date
         Date currentDate = Calendar.getInstance().getTime();
-        mEndDateApiFormat = mSdfToApi.format(currentDate);
 
+        mEndDateApiFormat = mSdfToApi.format(currentDate);
         mEndDateTextView.setText(mSdfToDisplay.format(currentDate));
     }
 
@@ -224,6 +221,7 @@ public class SearchAndNotificationFragment extends Fragment implements SearchRes
             new SearchCall().search(this, mQuery.getText().toString(), getSection(), mBeginDateApiFormat, mEndDateApiFormat);
     }
 
+    // Get response from searchCall API
     @Override
     public void onResponse(SearchResponse searchResponse) {
         Intent intent = new Intent(getContext(), DisplaySearchActivity.class);
@@ -236,7 +234,6 @@ public class SearchAndNotificationFragment extends Fragment implements SearchRes
         Log.i("MainActivity", throwable.toString());
     }
 
-    // NOTIFICATION PART
     private void initNotificationActivity() {
         queryUserPreferences();
         categoriesPosition();
@@ -361,7 +358,6 @@ public class SearchAndNotificationFragment extends Fragment implements SearchRes
         mNotificationBtn.setOnCheckedChangeListener(listener);
     }
 
-    // BOTH PART
     private String getSection() {
         // Checkbox is checked or not return string for api
         String section = "";

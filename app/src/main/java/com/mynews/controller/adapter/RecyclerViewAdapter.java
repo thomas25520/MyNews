@@ -75,22 +75,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
         if (mResultList != null) {
             final Result result = mResultList.get(position);
-            if (result.getSubsection() == null) {
+            if (result.getSubsection() == null)
                 holder.categories.setText(result.getCategory());
-            } else {
-                if (result.getSubsection().isEmpty()) {
+            else {
+                if (result.getSubsection().isEmpty())
                     holder.categories.setText(result.getCategory());
-                } else {
+                else
                     holder.categories.setText(result.getCategory() + " > " + result.getSubsection());
-                }
             }
 
-            if (isMultimediaRequired) {
+            if (isMultimediaRequired)
                 if (result.hasImage())     // prevents the application from crashing if the article does not contain an image or link
                     Picasso.get().load(result.getMultimedia().get(0).getUrl()).into(holder.picture); // Use picasso library to display picture
-            } else {
-                Picasso.get().load(result.getMedia().get(0).getMediaMetadataList().get(0).getUrl()).into(holder.picture);
-            }
+                else
+                    Picasso.get().load(result.getMedia().get(0).getMediaMetadataList().get(0).getUrl()).into(holder.picture);
+
             holder.title.setText(result.getTitle());
             holder.date.setText(sdf.format(result.getPublishedDate())); // Convert date with SimpleDateFormat
             holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -102,30 +101,28 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
         } else {
             if (mDocsList != null) {
                 final Docs docs = mDocsList.get(position);
-                if (docs != null && docs.getTitle() != null && docs.getDate() != null) {
-                    if (docs.getSubCategory() == null) {
+                if (docs != null && docs.getTitle() != null && docs.getDate() != null)
+                    if (docs.getSubCategory() == null)
                         holder.categories.setText(docs.getCategory());
-                    } else {
-                        if (docs.getSubCategory().isEmpty()) {
+                    else {
+                        if (docs.getSubCategory().isEmpty())
                             holder.categories.setText(docs.getCategory());
-                        } else {
+                        else
                             holder.categories.setText(docs.getCategory() + " > " + docs.getSubCategory());
-                        }
                     }
 
-                    if (isMultimediaRequired) {
-                        if (docs.hasImage())
-                            Picasso.get().load(docs.getMultimediaSearch().get(0).getUrl()).into(holder.picture);
+                if (isMultimediaRequired)
+                    if (docs.hasImage())
+                        Picasso.get().load(docs.getMultimediaSearch().get(0).getUrl()).into(holder.picture);
+
+                holder.title.setText(docs.getTitle());
+                holder.date.setText(sdf.format(docs.getDate()));
+                holder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        mListener.onItemClicked(holder, docs, position);
                     }
-                    holder.title.setText(docs.getTitle());
-                    holder.date.setText(sdf.format(docs.getDate()));
-                    holder.itemView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mListener.onItemClicked(holder, docs, position);
-                        }
-                    });
-                }
+                });
             }
         }
     }

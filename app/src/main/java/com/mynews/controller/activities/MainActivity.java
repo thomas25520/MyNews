@@ -156,10 +156,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // select item on Navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // FIXME: 16/07/2019 A revoir pas besoin de faire une recherche passer par getTopStories
         // Handle Navigation Item Click
-        int id = item.getItemId();
-        switch (id) {
+        switch (item.getItemId()) {
             case R.id.activity_main_drawer_arts:
                 new SearchCall().search(this, "", "arts", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;

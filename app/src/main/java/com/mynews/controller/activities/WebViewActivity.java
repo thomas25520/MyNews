@@ -22,8 +22,7 @@ public class WebViewActivity extends AppCompatActivity {
     // Handle menu button
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == android.R.id.home) {
+        if (item.getItemId() == android.R.id.home) {
             onBackPressed();
             return true;
         }
