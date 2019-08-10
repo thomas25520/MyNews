@@ -12,14 +12,14 @@ import java.util.List;
  */
 public class Result {
     // Serialisation
-    @SerializedName("section")
-    private String category;
+    @SerializedName("section") // API string name
+    private String category; // My string name
 
     @SerializedName("subsection")
     private String subsection;
 
-    @SerializedName("title")// API string name
-    private String title; // My string name
+    @SerializedName("title")
+    private String title;
 
     @SerializedName("url")
     private String url;

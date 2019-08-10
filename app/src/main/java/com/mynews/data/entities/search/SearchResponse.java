@@ -22,7 +22,6 @@ public class SearchResponse {
     public List<Docs> getDocs() {
         return docs;
     }
-
     public Meta getMeta() {
         return meta;
     }
@@ -31,7 +30,6 @@ public class SearchResponse {
     public void setDocs(List<Docs> docs) {
         this.docs = docs;
     }
-
     public void setMeta(Meta meta) {
         this.meta = meta;
     }

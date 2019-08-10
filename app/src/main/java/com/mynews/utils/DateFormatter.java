@@ -8,7 +8,7 @@ public class DateFormatter {
         return String.format("%02d", day) + "/" + String.format("%02d", month + 1) + "/" + year;
     }
 
-    // Why Month + 1 ? : In docs adroid, month begin at 0, day begin at 1
+    // Why Month + 1 ? : In docs android, month begin at 0, day begin at 1
     public String getApiDateFormat(int year, int month, int day) {
         return year + String.format("%02d", month + 1) + String.format("%02d", day);
     }

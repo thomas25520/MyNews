@@ -41,11 +41,9 @@ public class Docs {
     public String getCategory() {
         return category;
     }
-
     public String getSubCategory() {
         return subCategory;
     }
-
     public List<MultimediaSearch> getMultimediaSearch() {
         return multimedia;
     }
@@ -57,18 +55,15 @@ public class Docs {
     public void setTitle(String title) {
         this.title = title;
     }
-
     public void setDate(Date date) {
         this.date = date;
     }
-
     public void setCategory(String category) {
         this.category = category;
     }
     public void setSubCategory(String subCategory) {
         this.subCategory = subCategory;
     }
-
     public void setMultimedia(List<MultimediaSearch> multimedia) {
         this.multimedia = multimedia;
     }

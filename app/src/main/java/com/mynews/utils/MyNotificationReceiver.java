@@ -35,7 +35,6 @@ public class MyNotificationReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         mContext = context;
-        // Set the alarm here.
         String q = SharedPreferencesManager.getString(context, USER_QUERY);
         String fq = SharedPreferencesManager.getString(context, USER_CATEGORIES);
         new SearchCall().search(new SearchResponseCallBack() {

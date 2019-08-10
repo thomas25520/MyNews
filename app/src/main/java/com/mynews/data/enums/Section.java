@@ -31,7 +31,7 @@ public enum Section {
     upshot("upshot"),
     world("world");
 
-    private String name = "";
+    private String name;
 
     Section(String name) {
         this.name = name;

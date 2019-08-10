@@ -28,7 +28,6 @@ import java.util.Calendar;
 import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchResponseCallBack {
-    SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
     private DrawerLayout mDrawerLayout;
 
     @Override
@@ -40,7 +39,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         configureDrawerLayout();
         setToolbar();
         setViewPagerAndTabs();
-        // displayNotificationOfTheDay(); // Only for test
     }
 
     @Override
@@ -56,6 +54,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private String getCurrentDateFormatToApi() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         return sdf.format(Calendar.getInstance().getTime());
     }
 
@@ -157,28 +156,27 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     // select item on Navigation drawer
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-        // FIXME: 16/07/2019 to improve
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+        // FIXME: 16/07/2019 A revoir pas besoin de faire une recherche passer par getTopStories
         // Handle Navigation Item Click
         int id = item.getItemId();
         switch (id) {
             case R.id.activity_main_drawer_arts:
-                new SearchCall().search(this, "", "arts", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "arts", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_business:
-                new SearchCall().search(this, "", "business", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "business", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_entrepreneurs:
-                new SearchCall().search(this, "", "entrepreneurs", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "entrepreneurs", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_politics:
-                new SearchCall().search(this, "", "politics", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "politics", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_sports:
-                new SearchCall().search(this, "", "sports", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "sports", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             case R.id.activity_main_drawer_travels:
-                new SearchCall().search(this, "", "travels", sdf.format(Calendar.getInstance().getTime()), sdf.format(Calendar.getInstance().getTime()));
+                new SearchCall().search(this, "", "travels", getCurrentDateFormatToApi(), getCurrentDateFormatToApi());
                 break;
             default:
                 break;

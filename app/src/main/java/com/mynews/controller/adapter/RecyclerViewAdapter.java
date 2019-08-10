@@ -71,7 +71,6 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
 
     @Override
     public void onBindViewHolder(@NonNull final MyViewHolder holder, final int position) {
-
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/YYYY");
 
         if (mResultList != null) {

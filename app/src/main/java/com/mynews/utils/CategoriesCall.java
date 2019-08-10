@@ -17,7 +17,6 @@ import retrofit2.Response;
  * Created by Dutru Thomas on 30/05/2019.
  */
 public class CategoriesCall {
-
     // Top stories reference
     public void getTopStoriesHome(final ResponseCallback topStoriesHomeResponseCallback) {
         Call<Root> call = RetrofitManager.getInstance().getTopStoriesFrom(Section.home.toString(), RetrofitManager.getApiKey());

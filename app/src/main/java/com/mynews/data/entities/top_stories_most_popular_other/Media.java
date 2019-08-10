@@ -20,5 +20,4 @@ public class Media {
     public void setMediaMetadataList(List<MediaMetadata> mediaMetadataList) {
         this.mediaMetadataList = mediaMetadataList;
     }
-
 }
