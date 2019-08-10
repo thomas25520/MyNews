@@ -40,7 +40,9 @@ public class MyNotificationReceiver extends BroadcastReceiver {
         new SearchCall().search(new RootSearchCallBack() {
             @Override
             public void onResponse(SearchResponse searchResponse) {
-                createAndShowNotification(R.drawable.ic_news_logo, getNotificationTitle(searchResponse.getMeta().getNumberOfArticles()), "", NotificationCompat.PRIORITY_DEFAULT, CHANNEL_ID, NOTIFICATION_ID, mContext);
+                String title = getNotificationTitle(searchResponse.getMeta().getNumberOfArticles());
+
+                createAndShowNotification(R.drawable.ic_news_logo, title, "", NotificationCompat.PRIORITY_DEFAULT, CHANNEL_ID, NOTIFICATION_ID, mContext);
             }
 
             @Override
