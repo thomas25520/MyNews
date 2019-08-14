@@ -1,7 +1,9 @@
 package com.mynews.controller.activities;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -21,6 +23,7 @@ import com.mynews.callbacks_interfaces.SearchResponseCallBack;
 import com.mynews.controller.adapter.ViewPagerAdapter;
 import com.mynews.controller.fragment.TabCategoriesFragment;
 import com.mynews.data.entities.search.SearchResponse;
+import com.mynews.utils.NotificationManager;
 import com.mynews.utils.SearchCall;
 
 import java.text.SimpleDateFormat;
@@ -29,6 +32,7 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SearchResponseCallBack {
     private DrawerLayout mDrawerLayout;
+    Context mContext = this;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,10 +46,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        new notifThread().execute("");
+    }
+
+    @Override
     public void onResponse(SearchResponse searchResponse) {
         Intent intent = new Intent(this, DisplaySearchActivity.class);
         intent.putExtra("searchResponse", searchResponse.toJson()); // put string object converted with json
         startActivity(intent);
+    }
+
+    private class notifThread extends AsyncTask<String, Void, Void> {
+
+        @Override
+        protected Void doInBackground(String... vo) {
+            NotificationManager notificationManager = new NotificationManager(mContext);
+            while (true) {
+                notificationManager.displayNotification();
+                try {
+                    Thread.sleep(5000);
+                } catch (InterruptedException e) {
+                    Thread.interrupted();
+                }
+            }
+        }
     }
 
     @Override

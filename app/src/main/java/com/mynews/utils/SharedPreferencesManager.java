@@ -33,4 +33,28 @@ public class SharedPreferencesManager {
         mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         return mPreferences.getBoolean(key, false);
     }
+
+    // Save Day in sharedPreferences
+    public static void putDay(Context context, String key, int value) {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        mPreferences.edit().putInt(key, value).apply();
+    }
+
+    // Save Month in sharedPreferences
+    public static void putMonth(Context context, String key, int value) {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        mPreferences.edit().putInt(key, value).apply();
+    }
+
+    // Get Day in sharedPreferences
+    public static int getDay(Context context, String key) {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPreferences.getInt(key, 0);
+    }
+
+    // Get Month in sharedPreferences
+    public static int getMonth(Context context, String key) {
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        return mPreferences.getInt(key, 0);
+    }
 }
